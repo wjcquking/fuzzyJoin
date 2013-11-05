@@ -7,7 +7,7 @@ public class FlickrSimilarityUtil {
 	//time threshold
 	public static long temporalThreshold = 24*3600*1000;
 	
-	//spatial threshold
+	//spatial threshold, Unit : km
 	public static double distanceThreshold = 0.002;
 	 
 	//textual threshold
@@ -19,6 +19,9 @@ public class FlickrSimilarityUtil {
 	//the tile number of each line
 	public static final int tilesNumber = 12;
 	
+	public static final int totalTileNumber = tilesNumber * tilesNumber;
+	
+	public static final int partitionNumber = 6;
 	
 	/* For the data of Paris flickr image picture
 	 * If We know the data,we can split the whole universe

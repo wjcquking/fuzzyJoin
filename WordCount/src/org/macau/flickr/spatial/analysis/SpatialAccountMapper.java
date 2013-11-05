@@ -16,6 +16,7 @@ public class SpatialAccountMapper extends
 	private final static IntWritable one = new IntWritable(1);
 
 	public static int tileNumber(double lat,double lon){
+		
 //		System.out.println(lat - FlickrSimilarityUtil.minLat);
 //		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth);
 //		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);

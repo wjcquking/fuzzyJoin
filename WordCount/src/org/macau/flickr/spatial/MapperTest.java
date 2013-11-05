@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 import org.macau.spatial.Distance;
 
@@ -68,14 +69,23 @@ public class MapperTest {
 		
 		/**
 		 * the range of Paris flickr data
-		 * latitude : 48.815101 - 48.902967
-		 * longitude : 2.223266 - 2.473817
+		 * latitude : 48.815101 - 48.902967, width
+		 * longitude : 2.223266 - 2.473817,height
 		 * 48.857952;2.414631
 		 * 
 		 */
 		System.out.println("Distance of all the point");
-		System.out.println(Distance.GreatCircleDistance(48.841474, 2.252975, 48.843169, 2.252873));
-		System.out.println(Distance.GreatCircleDistance(48.815101, 2.223266 , 48.902967, 2.473817));
+		
+		/*
+		 * the Paris Area
+		 * the height is 9.781198378041525
+		 * the width is 18.366105904837223
+		 * the longest distance is 20.79409087566547
+		 * The longest distance 20.79409087566547
+		 */
+		System.out.println("the height is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.minLon, FlickrSimilarityUtil.maxLat, FlickrSimilarityUtil.minLon));
+		System.out.println("the width is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.minLon, FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.maxLon));
+		System.out.println("the longest distance is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.minLon, FlickrSimilarityUtil.maxLat, FlickrSimilarityUtil.maxLon));
 		
 		System.out.println(ReadSpatialDataMapper.tileNumber(48.902967, 2.414631));
 		

@@ -1,4 +1,4 @@
-package org.macau.flickr.util.hilbert;
+package org.macau.flickr.util.spatial;
 
 public class HilbertValue {
 
@@ -13,6 +13,7 @@ public class HilbertValue {
 	 */
 	public static int encode(int x, int y, int r) {
 
+		
 	    int mask = (1 << r) - 1;
 	    int hodd = 0;
 	    int heven = x ^ y;
