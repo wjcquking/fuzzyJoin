@@ -17,7 +17,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
-public class SpatialBasicReducer extends
+public class SJMRSpatialReducer extends
 	Reducer<IntWritable, FlickrValue, Text, Text>{
 
 	private final Text text = new Text();

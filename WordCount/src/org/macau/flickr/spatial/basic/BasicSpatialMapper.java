@@ -1,4 +1,4 @@
-package org.macau.flickr.spatial;
+package org.macau.flickr.spatial.basic;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ import org.macau.flickr.util.FlickrValue;
  * ID;lat;lon;timestamp
  * 1093113743;48.89899;2.380696;973929974000
  */
-public class ReadSpatialDataMapper extends
+public class BasicSpatialMapper extends
 Mapper<Object, Text, IntWritable, FlickrValue>{
 
 	//use the Hilbert curve to find the best partition function

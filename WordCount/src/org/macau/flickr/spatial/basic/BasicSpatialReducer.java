@@ -1,4 +1,4 @@
-package org.macau.flickr.spatial;
+package org.macau.flickr.spatial.basic;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.apache.hadoop.mapreduce.Reducer;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
-public class SpatialBasicReducer extends
+public class BasicSpatialReducer extends
 	Reducer<IntWritable, FlickrValue, Text, Text>{
 
 	private final Text text = new Text();
