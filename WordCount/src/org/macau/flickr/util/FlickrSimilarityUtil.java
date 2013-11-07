@@ -17,7 +17,7 @@ public class FlickrSimilarityUtil {
 	public static final int reducerNumber = 6;
 	
 	//the tile number of each line
-	public static final int tilesNumber = 12;
+	public static final int tilesNumber = 100;
 	
 	public static final int totalTileNumber = tilesNumber * tilesNumber;
 	

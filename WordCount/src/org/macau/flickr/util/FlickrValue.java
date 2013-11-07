@@ -108,7 +108,7 @@ public class FlickrValue implements Writable {
 
     @Override
     public String toString() {
-        return id + ":" + lat + ";" + lon + ";" + timestamp;
+        return id + ":" + lat + ";" + lon + ";" + timestamp + ";" + tag;
     }
 
     public void write(DataOutput out) throws IOException {
@@ -125,5 +125,6 @@ public class FlickrValue implements Writable {
 		lat = in.readDouble();
 		lon = in.readDouble();
 		timestamp = in.readLong();
+		tag = in.readInt();
 	}
 }
