@@ -28,55 +28,70 @@ public class SJMRSpatialReducer extends
 			Context context) throws IOException, InterruptedException{
 		
 		int count = 0;
+		
 		for(FlickrValue value:values){
 			count++;
+			/*We need new a FlickrValue, if not, the values in Map.getTag() will become the same
+			 * this may because the address of the value is the same, when change a value, all the values
+			 * in the Map.getTag will become the same
+			 * 
+			 * */
+			FlickrValue fv = new FlickrValue(value);
+			
 			if(map.containsKey(value.getTag())){
-				map.get(value.getTag()).add(value);
+				/*
+				 * The same function of the map.get(value.getTag()).add(fv);
+				 * ArrayList<FlickrValue> recordList = map.get(value.getTag());
+				 * recordList.add(fv);
+				 * 
+				 * the recordList is the same to the map.get(), they are in the same address
+				 * when you change one, you change another one.
+				 * 
+				 */
+				map.get(value.getTag()).add(fv);
 
 			}else{
-				
-				//System.out.println("2"+ value.getTag());
+
 				ArrayList<FlickrValue> recordList = new ArrayList<FlickrValue>();
-				recordList.add(value);
+				recordList.add(fv);
 				map.put(new Integer(value.getTag()),recordList);
+				
 			}
 		}
 		
-		System.out.println(key + ":" + count);
 
 		
 		Iterator it = map.entrySet().iterator();
 		
-		//System.out.println("size is "+map.size());
 		
 		while(it.hasNext()){
 			Map.Entry<Integer,ArrayList<FlickrValue>> m = (Map.Entry<Integer,ArrayList<FlickrValue>>)it.next();
 			m.getKey();
 			ArrayList<FlickrValue> records = m.getValue();
 			
-//			System.out.println(m.getKey() +" "+ m.getValue().size());
-			//brute force
-//			for (int i = 0; i < records.size(); i++) {
-//				FlickrValue rec1 = records.get(i);
-//			    for (int j = i + 1; j < records.size(); j++) {
-//			    	FlickrValue rec2 = records.get(j);
-//			    	
-//			    	if(FlickrSimilarityUtil.SpatialSimilarity(rec1, rec2)){
-//			    		long ridA = rec1.getId();
-//			            long ridB = rec2.getId();
-////			            if (ridA < ridB) {
-////			                long rid = ridA;
-////			                ridA = ridB;
-////			                ridB = rid;
-////			            }
-//			            
-////			            System.out.println(ridA + "%" + ridB);
-//			            text.set(ridA + "%" + ridB);
-//			            context.write(text, new Text(""));
-//			    	}
-//			    	
-//			    }
-//			}
+			
+			
+//			brute force
+			for (int i = 0; i < records.size(); i++) {
+				FlickrValue rec1 = records.get(i);
+			    for (int j = i + 1; j < records.size(); j++) {
+			    	FlickrValue rec2 = records.get(j);
+			    	long ridA = rec1.getId();
+		            long ridB = rec2.getId();
+			    	if(FlickrSimilarityUtil.SpatialSimilarity(rec1, rec2)){
+			    		
+//			            if (ridA < ridB) {
+//			                long rid = ridA;
+//			                ridA = ridB;
+//			                ridB = rid;
+//			            }
+
+			            text.set(ridA + "%" + ridB);
+			            context.write(text, new Text(""));
+			    	}
+			    	
+			    }
+			}
 		}
 		
 		//System.out.println("key is " + key + "record size is " + records.size());

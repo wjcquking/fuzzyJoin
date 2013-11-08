@@ -26,7 +26,7 @@ import org.macau.flickr.util.spatial.ZOrderValue;
  * ID;lat;lon;timestamp
  * 1093113743;48.89899;2.380696;973929974000
  */
-public class ReadSpatialDataMapper extends
+public class SJMRSpatialMapper extends
 Mapper<Object, Text, IntWritable, FlickrValue>{
 
 	/*
@@ -63,6 +63,11 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		double lat = Double.parseDouble(value.toString().split(";")[1]);
 		double lon = Double.parseDouble(value.toString().split(";")[2]);
 		long timestamp = Long.parseLong(value.toString().split(";")[3]);
+		
+		if(id == 65480044){
+			
+		}
+		
 		
 		int  tileNumber = tileNumber(lat,lon);
 		
