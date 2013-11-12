@@ -16,7 +16,7 @@ public class FlickrSimilarityJoin {
 //		boolean state = TemporalJoinJob.TemporalSimilarityBasicJoin(conf);
 //		boolean state = TemporalAccount.TemporalAccountJob(conf);
 //		boolean state = SpatialAccount.spatialAccountJob(conf);
-		boolean state = SJMRSpatialSimilarityJoin.SpatialSimilarityBasicJoin(conf);
+		boolean state = SJMRSpatialSimilarityJoin.SJMRSpatialJoin(conf);
 //		boolean state = SpatialSimilarityJoin.SpatialSimilarityBasicJoin(conf);
 //		boolean state = TemporalSimilarityJoin.TemporalSimilarityBasicJoin(conf);
 		

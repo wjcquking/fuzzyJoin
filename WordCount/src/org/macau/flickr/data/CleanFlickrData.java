@@ -1,5 +1,9 @@
 package org.macau.flickr.data;
 
+
+import java.io.File;
+import java.io.IOException;
+
 /**
  * 
  * @author hadoop
@@ -15,4 +19,16 @@ package org.macau.flickr.data;
 
 public class CleanFlickrData {
 	
+	public static void main(String[] args) throws IOException{
+		File f1 = new File("d:\\1.txt");
+		
+		try{
+			
+		}catch(Exception e){
+			boolean b = f1.createNewFile();
+		}
+		
+		
+		System.out.println(f1.getAbsolutePath());
+	}
 }

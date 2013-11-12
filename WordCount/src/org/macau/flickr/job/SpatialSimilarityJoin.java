@@ -6,8 +6,8 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.macau.flickr.spatial.ReadSpatialDataMapper;
-import org.macau.flickr.spatial.SpatialBasicReducer;
+import org.macau.flickr.spatial.basic.BasicSpatialMapper;
+import org.macau.flickr.spatial.basic.BasicSpatialReducer;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
@@ -18,11 +18,11 @@ public static boolean SpatialSimilarityBasicJoin(Configuration conf) throws Exce
 		Job spaitialJob = new Job(conf,"Spatial Similarity Join");
 		spaitialJob.setJarByClass(SpatialSimilarityJoin.class);
 		
-		spaitialJob.setMapperClass(ReadSpatialDataMapper.class);
+		spaitialJob.setMapperClass(BasicSpatialMapper.class);
 		//there can add one combiner which can combine the result
 		//spaitialJob.setCombinerClass(TemporalBasicReducer.class);
 		
-		spaitialJob.setReducerClass(SpatialBasicReducer.class);
+		spaitialJob.setReducerClass(BasicSpatialReducer.class);
 		
 		spaitialJob.setMapOutputKeyClass(IntWritable.class);
 		spaitialJob.setMapOutputValueClass(FlickrValue.class);

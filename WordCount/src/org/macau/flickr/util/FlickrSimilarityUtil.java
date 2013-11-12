@@ -8,7 +8,7 @@ public class FlickrSimilarityUtil {
 	public static long temporalThreshold = 24*3600*1000;
 	
 	//spatial threshold, Unit : km
-	public static double distanceThreshold = 0.002;
+	public static double distanceThreshold = 0.001;
 	 
 	//textual threshold
 	public static double textualThreshold = 0.6;

@@ -25,9 +25,7 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 	
 	//get the whole universe and get the tile number
 	public static int tileNumber(double lat,double lon){
-//		System.out.println(lat - FlickrSimilarityUtil.minLat);
-//		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth);
-//		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
+
 		int latNumber = (int) ((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
 		int lonNumber = (int)((lon- FlickrSimilarityUtil.minLon)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
 		return latNumber + lonNumber* FlickrSimilarityUtil.tilesNumber;

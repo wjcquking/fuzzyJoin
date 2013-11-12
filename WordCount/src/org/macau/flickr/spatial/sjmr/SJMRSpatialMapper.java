@@ -16,6 +16,7 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 import org.macau.flickr.util.spatial.ZOrderValue;
+import org.macau.flickr.spatial.partition.*;
 
 /**
  * 
@@ -31,15 +32,15 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 
 	/*
 	 * use the z curve order and round-robin algorithm to find the best partition function
+	 * the universe is divided regularly into Nt tiles
+	 * each tile is number from 0 to Nt-1 according to z curve, 
+	 * and mapped to a partition p with a round robin scheme
+	 * 
 	 */
 
-	//the universe is divided regularly into Nt tiles
-	//each tile is number from 0 to Nt-1 according to z curve, 
-	//and mapped to a partition p with a round robin scheme
+	
 	public static int tileNumber(double lat,double lon){
-//		System.out.println(lat - FlickrSimilarityUtil.minLat);
-//		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth);
-//		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
+		
 		int latNumber = (int) ((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
 		int lonNumber = (int)((lon- FlickrSimilarityUtil.minLon)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
 		return ZOrderValue.parseToZOrder(latNumber, lonNumber);
@@ -64,10 +65,7 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		double lon = Double.parseDouble(value.toString().split(";")[2]);
 		long timestamp = Long.parseLong(value.toString().split(";")[3]);
 		
-		if(id == 65480044){
-			
-		}
-		
+
 		
 		int  tileNumber = tileNumber(lat,lon);
 		
@@ -77,7 +75,7 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		outputValue.setTag(tileNumber);
 		outputValue.setTimestamp(timestamp);
 		
-		outputKey.set(paritionNumber(tileNumber));
+		outputKey.set(GridPartition.paritionNumber(tileNumber));
 		context.write(outputKey, outputValue);
 		
 	}
