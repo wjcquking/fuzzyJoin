@@ -20,9 +20,9 @@ public class SpatialAccountMapper extends
 //		System.out.println(lat - FlickrSimilarityUtil.minLat);
 //		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth);
 //		System.out.println((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
-		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
-		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
-		return latNumber + lonNumber* FlickrSimilarityUtil.tilesNumber;
+		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		return latNumber + lonNumber* FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE;
 	}
 	
 	public void map(Object key,Text value,Context context)

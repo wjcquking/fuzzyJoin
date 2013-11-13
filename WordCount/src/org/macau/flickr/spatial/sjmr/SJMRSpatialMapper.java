@@ -49,15 +49,15 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 	
 	public static int tileNumber(double lat,double lon){
 		
-		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
-		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
+		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
 		return ZOrderValue.parseToZOrder(latNumber, lonNumber);
 		
 	}
 	
 	public static int paritionNumber(int tileNumber){
 		
-		return (tileNumber +1) % FlickrSimilarityUtil.partitionNumber;
+		return (tileNumber +1) % FlickrSimilarityUtil.PARTITION_NUMBER;
 		
 	}
 	

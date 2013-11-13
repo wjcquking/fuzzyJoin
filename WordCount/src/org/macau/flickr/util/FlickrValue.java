@@ -157,7 +157,7 @@ public class FlickrValue implements Writable {
 
     @Override
     public String toString() {
-        return id + ":" + lat + ";" + lon + ";" + timestamp + ";" + tag + ";" + tileNumber +";" + tiles;
+        return id + ";" + lat + ";" + lon + ";" + timestamp + ";" + tag + ";" + tileNumber +";" + tiles;
     }
 
     /**

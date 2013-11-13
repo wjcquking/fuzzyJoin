@@ -12,6 +12,6 @@ import org.macau.flickr.util.FlickrSimilarityUtil;
 
 public class SpatialPartitioningFunction {
 	
-	public static int tilesTotalNumber = FlickrSimilarityUtil.tilesNumber;
+	public static int tilesTotalNumber = FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE;
 	
 }

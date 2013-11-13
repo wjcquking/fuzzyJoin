@@ -4,7 +4,10 @@ import java.io.IOException;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
+import org.macau.flickr.spatial.partition.GridPartition;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
@@ -19,23 +22,6 @@ import org.macau.flickr.util.FlickrValue;
  */
 public class BasicSpatialMapper extends
 Mapper<Object, Text, IntWritable, FlickrValue>{
-
-	//use the Hilbert curve to find the best partition function
-	
-	
-	//get the whole universe and get the tile number
-	public static int tileNumber(double lat,double lon){
-
-		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
-		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
-		return latNumber + lonNumber* FlickrSimilarityUtil.tilesNumber;
-	}
-	
-	public static int paritionNumber(int tileNumber){
-		
-		int number = 1;
-		return number;
-	}
 	
 	private IntWritable outputKey = new IntWritable();
 	private final FlickrValue outputValue = new FlickrValue();
@@ -43,6 +29,23 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 	
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
+		InputSplit inputSplit = context.getInputSplit();
+		
+		//R: 0; S:1
+		int tag;
+		
+		//get the the file name which is used for separating the different set
+		String fileName = ((FileSplit)inputSplit).getPath().getName();
+				
+		
+		
+		if(fileName.contains(FlickrSimilarityUtil.R_TAG)){
+			
+			tag = 0;
+			
+		}else{
+			tag = 1;
+		}
 		
 		long id =Long.parseLong(value.toString().split(";")[0]);
 		double lat = Double.parseDouble(value.toString().split(";")[1]);
@@ -55,7 +58,8 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		outputValue.setLon(lon);
 		outputValue.setTimestamp(timestamp);
 		
-		outputKey.set(tileNumber(lat,lon));
+		
+		outputKey.set(GridPartition.tileNumber(lat, lon));
 		
 		context.write(outputKey, outputValue);
 		

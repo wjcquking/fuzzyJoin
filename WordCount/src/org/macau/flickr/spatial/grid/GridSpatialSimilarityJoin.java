@@ -17,9 +17,6 @@ public static boolean GridSpatialJoin(Configuration conf) throws Exception{
 		spaitialJob.setJarByClass(GridSpatialSimilarityJoin.class);
 		
 		spaitialJob.setMapperClass(GridSpatialMapper.class);
-		//there can add one combiner which can combine the result
-		//spaitialJob.setCombinerClass(TemporalBasicReducer.class);
-		
 		spaitialJob.setReducerClass(GridSpatialReducer.class);
 		
 		spaitialJob.setMapOutputKeyClass(IntWritable.class);

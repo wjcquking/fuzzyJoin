@@ -2,7 +2,10 @@ package org.macau.flickr.job;
 
 import org.apache.hadoop.conf.Configuration;
 import org.macau.flickr.spatial.analysis.SpatialAccount;
+import org.macau.flickr.spatial.basic.BasicSpatialRSSimilarityJoin;
 import org.macau.flickr.spatial.grid.GridSpatialSimilarityJoin;
+import org.macau.flickr.spatial.minimal.MiniSpatialSort;
+import org.macau.flickr.spatial.minimal.MiniSpatialSample;
 import org.macau.flickr.spatial.sjmr.SJMRSpatialSimilarityJoin;
 import org.macau.flickr.spatial.sjmr.rs.SJMRSpatialRSSimilarityJoin;
 import org.macau.flickr.temporal.analysis.TemporalAccount;
@@ -25,7 +28,11 @@ public class FlickrSimilarityJoin {
 		
 		//the spatial RS similairty Join
 //		boolean state = SJMRSpatialRSSimilarityJoin.SJMRSpatialJoin(conf);
-		boolean state = GridSpatialSimilarityJoin.GridSpatialJoin(conf);
+//		boolean state = GridSpatialSimilarityJoin.GridSpatialJoin(conf);
+//		boolean state = MiniSpatialSample.MiniSpatial(conf);
+//		boolean state = MiniSpatialSort.MiniSpatial(conf);
+		
+		boolean state = BasicSpatialRSSimilarityJoin.BasicSpatialJoin(conf);
 		
 		if(state){
 			System.out.println("Phase One cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");

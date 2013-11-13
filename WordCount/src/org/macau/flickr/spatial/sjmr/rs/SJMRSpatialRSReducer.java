@@ -16,6 +16,7 @@ import java.util.Map;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Reducer.Context;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
@@ -23,66 +24,92 @@ public class SJMRSpatialRSReducer extends
 	Reducer<IntWritable, FlickrValue, Text, Text>{
 
 	private final Text text = new Text();
-	private final Map<Integer,ArrayList<FlickrValue>> map = new HashMap<Integer,ArrayList<FlickrValue>>();
+	private final Map<Integer,ArrayList<FlickrValue>> rMap = new HashMap<Integer,ArrayList<FlickrValue>>();
+	private final Map<Integer,ArrayList<FlickrValue>> sMap = new HashMap<Integer,ArrayList<FlickrValue>>();
 
-	//private final ArrayList<FlickrValue> records = new ArrayList<FlickrValue>();
-	private final ArrayList<FlickrValue> rRecords = new ArrayList<FlickrValue>();
-	private final ArrayList<FlickrValue> sRecords = new ArrayList<FlickrValue>();
 	
 	public void reduce(IntWritable key, Iterable<FlickrValue> values,
 			Context context) throws IOException, InterruptedException{
 		
 		int count = 0;
+		System.out.println(key);
+//		System.out.println(values.toString());
 		
 		for(FlickrValue value:values){
-			count++;
+//			System.out.println(value);
+//			System.out.println("tile " + value.getTileNumber());
+//			System.out.println(count++);
 			/*We need new a FlickrValue, if not, the values in Map.getTag() will become the same
 			 * this may because the address of the value is the same, when change a value, all the values
 			 * in the Map.getTag will become the same
 			 * 
 			 * */
 			FlickrValue fv = new FlickrValue(value);
-				
 			
-			
-			if(map.containsKey(value.getTag())){
-				/*
-				 * The same function of the map.get(value.getTag()).add(fv);
-				 * ArrayList<FlickrValue> recordList = map.get(value.getTag());
-				 * recordList.add(fv);
-				 * 
-				 * the recordList is the same to the map.get(), they are in the same address
-				 * when you change one, you change another one.
-				 * 
-				 */
-				map.get(value.getTag()).add(fv);
+			//R
+			if(fv.getTag() == 0){
+				if(rMap.containsKey(value.getTileNumber())){
+					
+					rMap.get(value.getTileNumber()).add(fv);
 
+				}else{
+
+					ArrayList<FlickrValue> recordList = new ArrayList<FlickrValue>();
+					recordList.add(fv);
+					rMap.put(new Integer(value.getTileNumber()),recordList);
+					
+				}
 			}else{
+				if(sMap.containsKey(value.getTileNumber())){
+					
+					sMap.get(value.getTileNumber()).add(fv);
 
-				ArrayList<FlickrValue> recordList = new ArrayList<FlickrValue>();
-				recordList.add(fv);
-				map.put(new Integer(value.getTag()),recordList);
-				
+				}else{
+
+					ArrayList<FlickrValue> recordList = new ArrayList<FlickrValue>();
+					recordList.add(fv);
+					sMap.put(new Integer(value.getTileNumber()),recordList);
+					
+				}
 			}
 		}
 		
 
 		
-		Iterator it = map.entrySet().iterator();
+		Iterator it = rMap.entrySet().iterator();
 		
 		
 		while(it.hasNext()){
 			Map.Entry<Integer,ArrayList<FlickrValue>> m = (Map.Entry<Integer,ArrayList<FlickrValue>>)it.next();
 			m.getKey();
-			ArrayList<FlickrValue> records = m.getValue();
+			ArrayList<FlickrValue> rRecords = m.getValue();
+			//System.out.println(sMap.get(m.getKey()));
+			ArrayList<FlickrValue> sRecords = new ArrayList<FlickrValue>();
 			
+			/*
+			 * This is important,because the sMap may don't have the key value
+			 * 
+			 */
+			if(sMap.get(m.getKey()) != null){
+				sRecords = sMap.get(m.getKey());
+			}
+			
+			
+			System.out.println(rRecords.size() + " r" );
+			System.out.println(sRecords.size() + " s" );
 			
 			
 //			brute force
-			for (int i = 0; i < records.size(); i++) {
-				FlickrValue rec1 = records.get(i);
-			    for (int j = i + 1; j < records.size(); j++) {
-			    	FlickrValue rec2 = records.get(j);
+			for (int i = 0; i < rRecords.size(); i++) {
+				FlickrValue rec1 = rRecords.get(i);
+				
+				//System.out.println(rec1);
+			    for (int j = 0; j < sRecords.size(); j++) {
+			    	
+			    	
+			    	FlickrValue rec2 = sRecords.get(j);
+			    	//System.out.println(rec2);
+			    	
 			    	long ridA = rec1.getId();
 		            long ridB = rec2.getId();
 			    	if(FlickrSimilarityUtil.SpatialSimilarity(rec1, rec2)){
@@ -100,9 +127,6 @@ public class SJMRSpatialRSReducer extends
 			    }
 			}
 		}
-		
-		//System.out.println("key is " + key + "record size is " + records.size());
-		
 		
 	}
 	

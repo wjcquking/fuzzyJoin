@@ -29,19 +29,16 @@ public class GridSpatialReducer extends
 	public void reduce(IntWritable key, Iterable<FlickrValue> values,
 			Context context) throws IOException, InterruptedException{
 		
-		int count = 0;
 		System.out.println(key);
-//		System.out.println(values.toString());
 		
 		for(FlickrValue value:values){
-//			System.out.println(value);
-//			System.out.println("tile " + value.getTileNumber());
-//			System.out.println(count++);
-			/*We need new a FlickrValue, if not, the values in Map.getTag() will become the same
+			
+			/*
+			 * We need new a FlickrValue, if not, the values in Map.getTag() will become the same
 			 * this may because the address of the value is the same, when change a value, all the values
 			 * in the Map.getTag will become the same
 			 * 
-			 * */
+			 */
 			FlickrValue fv = new FlickrValue(value);
 			
 			//R
@@ -78,6 +75,7 @@ public class GridSpatialReducer extends
 		
 		
 		while(it.hasNext()){
+			@SuppressWarnings("unchecked")
 			Map.Entry<Integer,ArrayList<FlickrValue>> m = (Map.Entry<Integer,ArrayList<FlickrValue>>)it.next();
 			m.getKey();
 			ArrayList<FlickrValue> rRecords = m.getValue();
@@ -86,7 +84,7 @@ public class GridSpatialReducer extends
 			
 			/*
 			 * This is important,because the sMap may don't have the key value
-			 * 
+			 * so add one if condition to make sure the sMap can get some value by the key
 			 */
 			if(sMap.get(m.getKey()) != null){
 				sRecords = sMap.get(m.getKey());
@@ -99,25 +97,18 @@ public class GridSpatialReducer extends
 			
 //			brute force
 			for (int i = 0; i < rRecords.size(); i++) {
+				
 				FlickrValue rec1 = rRecords.get(i);
 				
-				//System.out.println(rec1);
 			    for (int j = 0; j < sRecords.size(); j++) {
 			    	
 			    	
 			    	FlickrValue rec2 = sRecords.get(j);
-			    	//System.out.println(rec2);
 			    	
 			    	long ridA = rec1.getId();
 		            long ridB = rec2.getId();
 			    	if(FlickrSimilarityUtil.SpatialSimilarity(rec1, rec2)){
 			    		
-//			            if (ridA < ridB) {
-//			                long rid = ridA;
-//			                ridA = ridB;
-//			                ridB = rid;
-//			            }
-
 			            text.set(ridA + "%" + ridB);
 			            context.write(text, new Text(""));
 			    	}

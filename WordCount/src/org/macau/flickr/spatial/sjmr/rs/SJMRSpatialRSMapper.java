@@ -24,6 +24,7 @@ import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 import org.macau.flickr.util.spatial.ZOrderValue;
 import org.macau.flickr.spatial.partition.*;
+import org.macau.spatial.Distance;
 
 /**
  * 
@@ -53,10 +54,65 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 	
 	public static int tileNumber(double lat,double lon){
 		
-		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
-		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
+		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
 		return ZOrderValue.parseToZOrder(latNumber, lonNumber);
 		
+	}
+	
+	/*
+	 * the cell start from 0 to n-1
+	 * for the S set, the tile is larger than the tile of R set one threshold width
+	 */
+	public static ArrayList<Integer> tileNumberOfS(double lat, double lon){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		double tileWidth = FlickrSimilarityUtil.wholeSpaceWidth / FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE;
+		double tileHight = FlickrSimilarityUtil.WholeSpaceLength / FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE;
+		
+		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+//		list.add(ZOrderValue.parseToZOrder(latNumber, lonNumber));
+		
+		ArrayList<Integer> latList = new ArrayList<Integer>();
+		ArrayList<Integer> lonList = new ArrayList<Integer>();
+		
+		latList.add(latNumber);
+		lonList.add(lonNumber);
+		
+		/*
+		 * get S lat tile list
+		 */
+		if( Distance.GreatCircleDistance(lat,lon,FlickrSimilarityUtil.MIN_LAT + latNumber*tileWidth,lon)< FlickrSimilarityUtil.DISTANCE_THRESHOLD ){
+			if(latNumber != 0){
+				latList.add(latNumber-1);
+			}
+		}
+		
+		if(Distance.GreatCircleDistance(lat,lon,FlickrSimilarityUtil.MIN_LAT + (latNumber+1)*tileWidth,lon) < FlickrSimilarityUtil.DISTANCE_THRESHOLD){
+			latList.add(latNumber+1);
+		}
+		
+		
+		/*
+		 * get S lon tile list
+		 */
+		if( Distance.GreatCircleDistance(lat,lon,lat,FlickrSimilarityUtil.MIN_LON + lonNumber*tileHight)< FlickrSimilarityUtil.DISTANCE_THRESHOLD ){
+			if(lonNumber != 0){
+				lonList.add(lonNumber-1);
+			}
+		}
+		
+		if(Distance.GreatCircleDistance(lat,lon,lat,FlickrSimilarityUtil.MIN_LON + (lonNumber+1)*tileHight) < FlickrSimilarityUtil.DISTANCE_THRESHOLD){
+			lonList.add(lonNumber+1);
+		}
+		
+		for(Integer la: latList){
+			for(Integer lo: lonList){
+				list.add(ZOrderValue.parseToZOrder(la, lo));
+			}
+		}
+		
+		return list;
 	}
 	
 	/*
@@ -71,7 +127,7 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 	}
 	public static int paritionNumber(int tileNumber){
 		
-		return (tileNumber +1) % FlickrSimilarityUtil.partitionNumber;
+		return (tileNumber +1) % FlickrSimilarityUtil.PARTITION_NUMBER;
 		
 	}
 	
@@ -103,7 +159,8 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		double lat = Double.parseDouble(value.toString().split(";")[1]);
 		double lon = Double.parseDouble(value.toString().split(";")[2]);
 		long timestamp = Long.parseLong(value.toString().split(";")[3]);
-		
+		ArrayList<Integer> tileList = new ArrayList<Integer>();
+		tileList = tileNumberOfS(lat,lon);
 
 		
 		int  tileNumber = tileNumber(lat,lon);
@@ -113,9 +170,19 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		outputValue.setLon(lon);
 		outputValue.setTag(tag);
 		outputValue.setTimestamp(timestamp);
+		outputValue.setTiles("");
+		//outputValue.setTileNumber(tileNumber);
 		
-		outputKey.set(GridPartition.paritionNumber(tileNumber));
-		context.write(outputKey, outputValue);
+//		outputKey.set(GridPartition.paritionNumber(tileNumber));
+//		context.write(outputKey, outputValue);
+		for(Integer tile: tileList){
+			
+			outputValue.setTileNumber(tile);
+//			outputKey.set(GridPartition.paritionNumber(tile));
+			outputKey.set(tile);
+			context.write(outputKey, outputValue);
+			
+		}
 		
 	}
 	

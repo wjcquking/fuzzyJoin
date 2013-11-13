@@ -1,6 +1,7 @@
 package org.macau.flickr.spatial.test;
 
 import org.macau.flickr.spatial.basic.BasicSpatialMapper;
+import org.macau.flickr.spatial.partition.GridPartition;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.spatial.Distance;
 
@@ -32,7 +33,7 @@ public class SpatialDataTest {
 		System.out.println("the width is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.MIN_LAT, FlickrSimilarityUtil.MIN_LON, FlickrSimilarityUtil.MIN_LAT, FlickrSimilarityUtil.MAX_LON));
 		System.out.println("the longest distance is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.MIN_LAT, FlickrSimilarityUtil.MIN_LON, FlickrSimilarityUtil.MAX_LAT, FlickrSimilarityUtil.MAX_LON));
 		
-		System.out.println(BasicSpatialMapper.tileNumber(48.902967, 2.414631));
+		System.out.println(GridPartition.tileNumber(48.902967, 2.414631));
 		
 		/*
 		 * Caculate two objects distance

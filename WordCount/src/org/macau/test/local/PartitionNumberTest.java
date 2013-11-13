@@ -11,7 +11,7 @@ public class PartitionNumberTest {
 
 	public static int paritionNumber(int tileNumber){
 		
-		return (tileNumber +1) % FlickrSimilarityUtil.partitionNumber;
+		return (tileNumber +1) % FlickrSimilarityUtil.PARTITION_NUMBER;
 		
 	}
 	

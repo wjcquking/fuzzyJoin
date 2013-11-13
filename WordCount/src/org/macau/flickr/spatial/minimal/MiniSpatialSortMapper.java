@@ -5,8 +5,10 @@ import java.io.IOException;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
@@ -18,9 +20,12 @@ import org.macau.flickr.util.FlickrValue;
  * The Data form:
  * ID;lat;lon;timestamp
  * 1093113743;48.89899;2.380696;973929974000
+ * 
+ * the boundary objects is 48.857543,48.864375 
+ * 
  */
 
-public class MiniSpatialMapper extends
+public class MiniSpatialSortMapper extends
 Mapper<Object, Text, DoubleWritable, FlickrValue>{
 
 	
@@ -35,9 +40,9 @@ Mapper<Object, Text, DoubleWritable, FlickrValue>{
 	 * So I choose the lat dimension
 	 */
 	public static int tileNumber(double lat,double lon){
-		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
-		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
-		return latNumber + lonNumber* FlickrSimilarityUtil.tilesNumber;
+		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		return latNumber + lonNumber* FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE;
 	}
 	
 	/**
@@ -74,6 +79,23 @@ Mapper<Object, Text, DoubleWritable, FlickrValue>{
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
 		
+		InputSplit inputSplit = context.getInputSplit();
+		//R: 0; S:1
+		int tag;
+		
+		//get the the file name which is used for separating the different set
+		String fileName = ((FileSplit)inputSplit).getPath().getName();
+				
+		
+		
+		if(fileName.contains(FlickrSimilarityUtil.R_TAG)){
+			
+			tag = 0;
+			
+		}else{
+			tag = 1;
+		}
+		
 		long id =Long.parseLong(value.toString().split(";")[0]);
 		double lat = Double.parseDouble(value.toString().split(";")[1]);
 		double lon = Double.parseDouble(value.toString().split(";")[2]);
@@ -84,9 +106,18 @@ Mapper<Object, Text, DoubleWritable, FlickrValue>{
 		outputValue.setLat(lat);
 		outputValue.setLon(lon);
 		outputValue.setTimestamp(timestamp);
+		outputValue.setTag(tag);
+		outputValue.setTiles("");
 		
-		outputKey.set(lat);
-		
+		//48.857543,		48.864375 
+		// the data is split by the lat and then send to different machine
+		if(lat < 48.857543){
+			outputKey.set(1);
+		}else if(lat > 48.864375 ){
+			outputKey.set(3);
+		}else{
+			outputKey.set(2);
+		}
 		context.write(outputKey, outputValue);
 		
 	}
