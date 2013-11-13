@@ -21,11 +21,11 @@ import org.macau.flickr.spatial.partition.*;
 /**
  * 
  * @author mb25428
- * Read the flickr data, extract the spatial information
+ * Read the flickr data, Random sample to decide whether send to other machine
+ * if ture, then extract the spatial information, send the object to other machines
  * For Example
- * The Data form:
- * ID;lat;lon;timestamp
- * 1093113743;48.89899;2.380696;973929974000
+ * The Data form:ID;lat;lon;timestamp
+ * The Data Example:1093113743;48.89899;2.380696;973929974000
  */
 public class MiniSpatialSampleMapper extends
 Mapper<Object, Text, IntWritable, FlickrValue>{
@@ -35,8 +35,8 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 	
 	public static int tileNumber(double lat,double lon){
 		
-		int latNumber = (int) ((lat - FlickrSimilarityUtil.minLat)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
-		int lonNumber = (int)((lon- FlickrSimilarityUtil.minLon)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
+		int latNumber = (int) ((lat - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.tilesNumber);
+		int lonNumber = (int)((lon- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.tilesNumber);
 		return ZOrderValue.parseToZOrder(latNumber, lonNumber);
 		
 	}

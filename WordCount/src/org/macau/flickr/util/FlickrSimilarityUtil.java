@@ -8,7 +8,7 @@ public class FlickrSimilarityUtil {
 	public static long temporalThreshold = 24*3600*1000;
 	
 	//spatial threshold, Unit : km
-	public static double distanceThreshold = 0.001;
+	public static double DISTANCE_THRESHOLD = 0.001;
 	 
 	//textual threshold
 	public static double textualThreshold = 0.6;
@@ -26,15 +26,17 @@ public class FlickrSimilarityUtil {
 	/* For the data of Paris flickr image picture
 	 * If We know the data,we can split the whole universe
 	*/
-	public static double maxLat = 48.902967;
-	public static double maxLon = 2.473817;
-	public static double minLat = 48.815101;
-	public static double minLon = 2.223266;
+	public static double MAX_LAT = 48.902967;
+	public static double MAX_LON = 2.473817;
+	public static double MIN_LAT = 48.815101;
+	public static double MIN_LON = 2.223266;
 	
-	public static double wholeSpaceWidth = maxLat - minLat;
-	public static double WholeSpaceLength = maxLon - minLon;
+	public static double wholeSpaceWidth = MAX_LAT - MIN_LAT;
+	public static double WholeSpaceLength = MAX_LON - MIN_LON;
 	
 	
+	public static final String R_TAG = "even";
+	public static final String S_TAG = "odd";
 	
 	public static final String flickrInputPath = "hdfs://localhost:9000/user/hadoop/input";
 	public static final String flickrOutputPath = "hdfs://localhost:9000/user/hadoop/output";
@@ -54,7 +56,7 @@ public class FlickrSimilarityUtil {
 	 * @return if the distance of two objects is larger than the distance threshold, return true, else return false
 	 */
 	public static boolean SpatialSimilarity(FlickrValue value1, FlickrValue value2){
-		return Distance.GreatCircleDistance(value1.getLat(), value1.getLon(), value2.getLat(), value2.getLon()) < distanceThreshold;
+		return Distance.GreatCircleDistance(value1.getLat(), value1.getLon(), value2.getLat(), value2.getLon()) < DISTANCE_THRESHOLD;
 	}
 	
 	public static double SpatialDistance(FlickrValue value1, FlickrValue value2){

@@ -28,9 +28,9 @@ public class SpatialDataTest {
 		 * the width is 18.366105904837223
 		 * the longest distance is 20.79409087566547 
 		 */
-		System.out.println("the height is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.minLon, FlickrSimilarityUtil.maxLat, FlickrSimilarityUtil.minLon));
-		System.out.println("the width is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.minLon, FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.maxLon));
-		System.out.println("the longest distance is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.minLat, FlickrSimilarityUtil.minLon, FlickrSimilarityUtil.maxLat, FlickrSimilarityUtil.maxLon));
+		System.out.println("the height is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.MIN_LAT, FlickrSimilarityUtil.MIN_LON, FlickrSimilarityUtil.MAX_LAT, FlickrSimilarityUtil.MIN_LON));
+		System.out.println("the width is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.MIN_LAT, FlickrSimilarityUtil.MIN_LON, FlickrSimilarityUtil.MIN_LAT, FlickrSimilarityUtil.MAX_LON));
+		System.out.println("the longest distance is "+Distance.GreatCircleDistance(FlickrSimilarityUtil.MIN_LAT, FlickrSimilarityUtil.MIN_LON, FlickrSimilarityUtil.MAX_LAT, FlickrSimilarityUtil.MAX_LON));
 		
 		System.out.println(BasicSpatialMapper.tileNumber(48.902967, 2.414631));
 		
@@ -40,7 +40,9 @@ public class SpatialDataTest {
 		 */
 		
 		String One = "3820596202;48.88655;2.340581;1249438230000";
+		String One1 = "3820596202;48.88655;2.340581;1249438230000";
 		String Two = "2595020925;48.886536;2.340592;1213429970000";
-		System.out.println("the height is "+Distance.GreatCircleDistance(48.88655, 2.340581, 48.886536,2.340592));
+		
+		System.out.println("the height is "+Distance.GreatCircleDistance(48.88655, 2.340581, 48.886568,2.340581));
 	}
 }

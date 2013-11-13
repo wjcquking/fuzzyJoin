@@ -22,6 +22,9 @@ package org.macau.flickr.util;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.apache.hadoop.io.Writable;
 
 
@@ -34,11 +37,36 @@ public class FlickrValue implements Writable {
     private double lon;
     private long timestamp;
     
-    //tile number
+    //tag number
     private int tag;
     
+    private int tileNumber;
+    
+    public int getTileNumber() {
+		return tileNumber;
+	}
 
-    public int getTag() {
+	public void setTileNumber(int tileNumber) {
+		this.tileNumber = tileNumber;
+	}
+
+	//the tiles List 
+    //for example 1,2,3
+    private String tiles;
+    
+    
+
+  
+
+	public String getTiles() {
+		return tiles;
+	}
+
+	public void setTiles(String tiles) {
+		this.tiles = tiles;
+	}
+
+	public int getTag() {
 		return tag;
 	}
 
@@ -96,6 +124,25 @@ public class FlickrValue implements Writable {
         this.timestamp = timestamp;
         this.tag = tag;
     }
+    
+    public FlickrValue(long id, double lat, double lon,long timestamp,int tag,String tiles) {
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.timestamp = timestamp;
+        this.tag = tag;
+        this.tiles = tiles;
+    }
+    
+    public FlickrValue(long id, double lat, double lon,long timestamp,int tag,String tiles,int tileNumber) {
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.timestamp = timestamp;
+        this.tag = tag;
+        this.tiles = tiles;
+        this.tileNumber = tileNumber;
+    }
 
     public FlickrValue(FlickrValue v) {
         id = v.id;
@@ -103,20 +150,32 @@ public class FlickrValue implements Writable {
         lon = v.lon;
         timestamp = v.timestamp;
         tag = v.tag;
+        tiles = v.tiles;
+        tileNumber = v.tileNumber;
     }
 
 
     @Override
     public String toString() {
-        return id + ":" + lat + ";" + lon + ";" + timestamp + ";" + tag;
+        return id + ":" + lat + ";" + lon + ";" + timestamp + ";" + tag + ";" + tileNumber +";" + tiles;
     }
 
+    /**
+     * the order is important 
+     * when write the 
+     * out.writeChars(tiles);
+     * out.writeInt(tileNumber);
+     * there is some mistakes in the result because they can not find the tileNumber
+     */
     public void write(DataOutput out) throws IOException {
         out.writeLong(id);
         out.writeDouble(lat);
         out.writeDouble(lon);
         out.writeLong(timestamp);
         out.writeInt(tag);
+        out.writeInt(tileNumber);
+        out.writeUTF(tiles);
+      
     }
 
 	public void readFields(DataInput in) throws IOException {
@@ -126,5 +185,8 @@ public class FlickrValue implements Writable {
 		lon = in.readDouble();
 		timestamp = in.readLong();
 		tag = in.readInt();
+		tileNumber = in.readInt();
+		tiles = in.readUTF();
+		
 	}
 }

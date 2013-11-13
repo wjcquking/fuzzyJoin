@@ -38,8 +38,12 @@ public class EnlargeFlickrData {
            
             String str = null;
            
+            int count = 0;
             while((str = br.readLine()) != null) {
-                  sb.append(str.split(";")[2]+"\r\n");
+            	count++;
+            	if(count %2 != 0){
+                  sb.append(str +"\r\n");
+            	}
                  
                   //System.out.println(str);
             }
@@ -48,7 +52,7 @@ public class EnlargeFlickrData {
             reader.close();
            
             // write string to file
-            FileWriter writer = new FileWriter("//home//hadoop//Dropbox//hadoop//input//flickr.modify.lon.data");
+            FileWriter writer = new FileWriter("//home//hadoop//Dropbox//hadoop//input//flickr.even.data");
             BufferedWriter bw = new BufferedWriter(writer);
             bw.write(sb.toString());
            

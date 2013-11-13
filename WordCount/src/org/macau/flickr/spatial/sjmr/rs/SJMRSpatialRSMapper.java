@@ -1,4 +1,4 @@
-package org.macau.flickr.spatial.sjmr;
+package org.macau.flickr.spatial.sjmr.rs;
 
 /**
  * @author: wangjian
@@ -6,16 +6,20 @@ package org.macau.flickr.spatial.sjmr;
  * 
  * the idea comes from the paper "SJMR:Parallelizing Spatial Join with MapReduce",IEEE, 2009
  * 
- * The MapFunction
+ * The MapFunction is for R join S
+ * read the data from two set R and S, and join the data
  */
 
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 import org.macau.flickr.util.spatial.ZOrderValue;
@@ -31,7 +35,7 @@ import org.macau.flickr.spatial.partition.*;
  */
 
 
-public class SJMRSpatialMapper extends
+public class SJMRSpatialRSMapper extends
 Mapper<Object, Text, IntWritable, FlickrValue>{
 
 	/*
@@ -55,6 +59,16 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		
 	}
 	
+	/*
+	 * extend the point at threshold width
+	 */
+	public static ArrayList<Integer> tileNumberList(double lat,double lon){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		
+		
+		return list;
+		
+	}
 	public static int paritionNumber(int tileNumber){
 		
 		return (tileNumber +1) % FlickrSimilarityUtil.partitionNumber;
@@ -67,6 +81,23 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 	
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
+		InputSplit inputSplit = context.getInputSplit();
+		
+		//R: 0; S:1
+		int tag;
+		
+		//get the the file name which is used for separating the different set
+		String fileName = ((FileSplit)inputSplit).getPath().getName();
+				
+		
+		
+		if(fileName.contains(FlickrSimilarityUtil.R_TAG)){
+			
+			tag = 0;
+			
+		}else{
+			tag = 1;
+		}
 		
 		long id =Long.parseLong(value.toString().split(";")[0]);
 		double lat = Double.parseDouble(value.toString().split(";")[1]);
@@ -80,7 +111,7 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		outputValue.setId(id);
 		outputValue.setLat(lat);
 		outputValue.setLon(lon);
-		outputValue.setTag(tileNumber);
+		outputValue.setTag(tag);
 		outputValue.setTimestamp(timestamp);
 		
 		outputKey.set(GridPartition.paritionNumber(tileNumber));
