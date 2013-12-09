@@ -1,6 +1,7 @@
 package org.macau.flickr.job;
 
 import org.apache.hadoop.conf.Configuration;
+import org.macau.flickr.knn.exact.first.PartitionJob;
 import org.macau.flickr.spatial.analysis.SpatialAccount;
 import org.macau.flickr.spatial.basic.BasicSpatialRSSimilarityJoin;
 import org.macau.flickr.spatial.grid.GridSpatialSimilarityJoin;
@@ -32,7 +33,12 @@ public class FlickrSimilarityJoin {
 //		boolean state = MiniSpatialSample.MiniSpatial(conf);
 //		boolean state = MiniSpatialSort.MiniSpatial(conf);
 		
-		boolean state = BasicSpatialRSSimilarityJoin.BasicSpatialJoin(conf);
+//		boolean state = BasicSpatialRSSimilarityJoin.BasicSpatialJoin(conf);
+		
+		/*
+		 * the kNN spatial Join
+		 */
+		boolean state = PartitionJob.spatialPartitionjob(conf);
 		
 		if(state){
 			System.out.println("Phase One cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");

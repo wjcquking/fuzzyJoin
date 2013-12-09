@@ -38,14 +38,17 @@ public class FlickrSimilarityUtil {
 	public static double wholeSpaceWidth = MAX_LAT - MIN_LAT;
 	public static double WholeSpaceLength = MAX_LON - MIN_LON;
 	
+	public static final int R_tag = 0;
+	public static final int S_tag = 1;
 	
 	public static final String R_TAG = "even";
 	public static final String S_TAG = "odd";
 	
-//	public static final String flickrInputPath = "hdfs://localhost:9000/user/hadoop/input";
-//	public static final String flickrOutputPath = "hdfs://localhost:9000/user/hadoop/output";
-	public static final String flickrInputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/input";
-	public static final String flickrOutputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/output";
+	public static final String flickrInputPath = "hdfs://localhost:9000/user/hadoop/input";
+	public static final String flickrOutputPath = "hdfs://localhost:9000/user/hadoop/output";
+	public static final String flickrResultPath = "hdfs://localhost:9000/user/hadoop/result";
+//	public static final String flickrInputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/input";
+//	public static final String flickrOutputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/output";
 	
 	/**
 	 * 

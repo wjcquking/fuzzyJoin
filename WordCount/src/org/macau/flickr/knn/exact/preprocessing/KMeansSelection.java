@@ -7,17 +7,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import org.macau.flickr.knn.exact.preprocessing.kmeans.kmeans;
 import org.macau.flickr.knn.exact.preprocessing.kmeans.kmeans_data;
 import org.macau.flickr.knn.exact.preprocessing.kmeans.kmeans_param;
 import org.macau.flickr.knn.util.kNNUtil;
-import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
 /**
@@ -93,7 +90,8 @@ public class KMeansSelection {
 	           
 	            double[][] points = pointList.toArray(new double[0][0]);
 	    		
-	    		kmeans_data data = new kmeans_data(points,pointList.size(), 2); //初始化数据结构
+	            //initial the data structure
+	    		kmeans_data data = new kmeans_data(points,pointList.size(), 2);
 	    		kmeans_param param = new kmeans_param(); //初始化参数结构
 	    		param.initCenterMehtod = kmeans_param.CENTER_RANDOM; //设置聚类中心点的初始化模式为随机模式
 	    	   

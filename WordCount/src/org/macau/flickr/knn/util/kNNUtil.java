@@ -14,6 +14,8 @@ public class kNNUtil {
 	public static final String R_FARTHEST_PATH = "//home//hadoop//Dropbox//hadoop//input//flickr.farthest.data";
 	public static final String R_KMEANS_PATH = "//home//hadoop//Dropbox//hadoop//input//flickr.kmeans.data";
 	
+	public static final String pivotOutputPath = "hdfs://localhost:9000/user/hadoop/pivot";
+	
 	//random selection
 	public static final int RANDOM_SELECTION_T = 20;
 	public static final double RANDOM_SELECTION_PROBABILITY = 0.005;
