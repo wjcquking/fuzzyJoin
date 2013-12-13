@@ -140,15 +140,15 @@ public class PartitionMapper extends
 			
 		}else if(tag == 1){
 			
-			if(PartitionJob.S_Partition[minPartition].getkNNDistance().size() < kNNUtil.REDUCER_NUMBER){
+			if(PartitionJob.S_Partition[minPartition].getkNNDistance().size() < kNNUtil.k){
 				
 				PartitionJob.S_Partition[minPartition].getkNNDistance().add(new Double(dist));
 				Collections.sort(PartitionJob.S_Partition[minPartition].getkNNDistance());
 				
 				//this code is not too good, I can change another one which record all the distance, then sort and delete.
-			}else if (PartitionJob.S_Partition[minPartition].getkNNDistance().get(kNNUtil.REDUCER_NUMBER-1) >= dist){
+			}else if (PartitionJob.S_Partition[minPartition].getkNNDistance().get(kNNUtil.k-1) >= dist){
 				
-				PartitionJob.S_Partition[minPartition].getkNNDistance().remove(kNNUtil.REDUCER_NUMBER -1);
+				PartitionJob.S_Partition[minPartition].getkNNDistance().remove(kNNUtil.k -1);
 				PartitionJob.S_Partition[minPartition].getkNNDistance().add(dist);
 				Collections.sort(PartitionJob.S_Partition[minPartition].getkNNDistance());
 				
@@ -170,7 +170,7 @@ public class PartitionMapper extends
 			
 		}
 		
-		outputValue.set(minPartition + ";" + tag + ";" + dist + ";"+id);
+		outputValue.set(minPartition + ";" + tag + ";" + dist + ";"+id + ";"+ lat + ";" + lon);
 		outputKey.set("");
 		
 		context.write(outputValue,outputKey);

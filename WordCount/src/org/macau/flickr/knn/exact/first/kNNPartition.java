@@ -3,7 +3,7 @@ package org.macau.flickr.knn.exact.first;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.macau.flickr.util.FlickrValue;
+import org.macau.flickr.util.FlickrPartitionValue;
 
 public class kNNPartition {
 
@@ -20,11 +20,32 @@ public class kNNPartition {
 	private double maxDistance;
 	
 	private List<Double> kNNDistance;
+	private List<FlickrPartitionValue> FlickrPartitionValueList = new ArrayList<FlickrPartitionValue>();
+	
 
-	private List<FlickrValue> FlickrValueList;
+	public List<FlickrPartitionValue> getFlickrPartitionValueList() {
+		return FlickrPartitionValueList;
+	}
+
+	public void setFlickrPartitionValueList(
+			List<FlickrPartitionValue> flickrPartitionValueList) {
+		FlickrPartitionValueList = flickrPartitionValueList;
+	}
+
+	
 	
 	public kNNPartition(){
 		
+	}
+	public kNNPartition(kNNPartition k){
+		pid = k.pid;
+		count = k.count;
+		minDistance = k.minDistance;
+		maxDistance = k.maxDistance;
+		kNNDistance = k.kNNDistance;
+		lat = k.lat;
+		lon = k.lon;
+		FlickrPartitionValueList = k.FlickrPartitionValueList;
 	}
 	
 	public kNNPartition(int count){
@@ -44,6 +65,13 @@ public class kNNPartition {
 		this.minDistance = minDistance;
 		this.maxDistance = maxDistance;
 		
+	}
+	
+	public kNNPartition(int pid,double lat,double lon){
+		this.pid = pid;
+		this.count = 0;
+		this.lat = lat;
+		this.lon = lon;
 	}
 	
 	public double getLat() {

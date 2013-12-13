@@ -20,21 +20,21 @@ public class kNNJoinFunction {
 			
 		List<Double> topList = new ArrayList<Double>();
 		
-		for(int j = 0; j < kNNUtil.REDUCER_NUMBER;j++){
+		for(int j = 0; j < S_Partition.length;j++){
 			
-			for(int k = 0; k < kNNUtil.REDUCER_NUMBER;k++){
+			for(int k = 0; k < S_Partition[j].getkNNDistance().size();k++){
 				
 				double distance = Distance.GreatCircleDistance(R_Partition.getLat(),  R_Partition.getLon(),  S_Partition[j].getLat(), S_Partition[j].getLon());
 				double upperBound = R_Partition.getMaxDistance() + distance + S_Partition[j].getkNNDistance().get(k);
 				
-				if(topList.size() < kNNUtil.REDUCER_NUMBER){
+				if(topList.size() < kNNUtil.k){
 					
 					topList.add(upperBound);
 					Collections.sort(topList);
 					
-				}else if(topList.get(kNNUtil.REDUCER_NUMBER-1) > upperBound){
+				}else if(topList.get(kNNUtil.k-1) > upperBound){
 					
-					topList.remove(kNNUtil.REDUCER_NUMBER-1);
+					topList.remove(kNNUtil.k-1);
 					topList.add(upperBound);
 					Collections.sort(topList);
 				}
@@ -42,9 +42,10 @@ public class kNNJoinFunction {
 			}
 		}
 		
-		return topList.get(kNNUtil.REDUCER_NUMBER-1);
+		return topList.get(kNNUtil.k-1);
 	
 	}
+	
 	
 	/**
 	 * 
@@ -52,29 +53,65 @@ public class kNNJoinFunction {
 	 * @param S_Partition
 	 * get the theta value for each partition in R.
 	 */
-	public static void boundingkNN(kNNPartition[] R_Partition,kNNPartition[] S_Partition){
+	public static double boundingkNN(kNNPartition R_Partition,List<kNNPartition> S_Partition){
+			
+		List<Double> topList = new ArrayList<Double>();
+		
+		for(int j = 0; j < S_Partition.size();j++){
+			
+			for(int k = 0; k < S_Partition.get(j).getkNNDistance().size();k++){
+				
+				double distance = Distance.GreatCircleDistance(R_Partition.getLat(),  R_Partition.getLon(),  S_Partition.get(j).getLat(), S_Partition.get(j).getLon());
+				double upperBound = R_Partition.getMaxDistance() + distance + S_Partition.get(j).getkNNDistance().get(k);
+				
+				if(topList.size() < kNNUtil.k){
+					
+					topList.add(upperBound);
+					Collections.sort(topList);
+					
+				}else if(topList.get(kNNUtil.k-1) > upperBound){
+					
+					topList.remove(kNNUtil.k-1);
+					topList.add(upperBound);
+					Collections.sort(topList);
+				}
+						
+			}
+		}
+		
+		return topList.get(kNNUtil.k-1);
+	
+	}
+	
+	/**
+	 * 
+	 * @param R_Partition: the R Partition Array.
+	 * @param S_Partition: the S Partition Array.
+	 * get the theta value for each partition in R.
+	 */
+	public static List<Double> boundingkNN(kNNPartition[] R_Partition,kNNPartition[] S_Partition){
 		
 		List<Double> thetaList = new ArrayList<Double>();
 		
-		for(int i = 0; i < kNNUtil.REDUCER_NUMBER;i++){
+		for(int i = 0; i < R_Partition.length;i++){
 			
 			List<Double> topList = new ArrayList<Double>();
 			
-			for(int j = 0; j < kNNUtil.REDUCER_NUMBER;j++){
+			for(int j = 0; j < S_Partition.length;j++){
 				
-				for(int k = 0; k < kNNUtil.REDUCER_NUMBER;k++){
+				for(int k = 0; k < S_Partition[j].getkNNDistance().size();k++){
 					
 					double distance = Distance.GreatCircleDistance(R_Partition[i].getLat(),  R_Partition[i].getLon(),  S_Partition[j].getLat(), S_Partition[j].getLon());
 					double upperBound = R_Partition[i].getMaxDistance() + distance + S_Partition[j].getkNNDistance().get(k);
 					
-					if(topList.size() < kNNUtil.REDUCER_NUMBER){
+					if(topList.size() < kNNUtil.k){
 						
 						topList.add(upperBound);
 						Collections.sort(topList);
 						
-					}else if(topList.get(kNNUtil.REDUCER_NUMBER-1) > upperBound){
+					}else if(topList.get(kNNUtil.k-1) > upperBound){
 						
-						topList.remove(kNNUtil.REDUCER_NUMBER-1);
+						topList.remove(kNNUtil.k-1);
 						topList.add(upperBound);
 						Collections.sort(topList);
 					}
@@ -82,7 +119,8 @@ public class kNNJoinFunction {
 				}
 			}
 			
-			thetaList.add(topList.get(kNNUtil.REDUCER_NUMBER-1));
+			thetaList.add(topList.get(kNNUtil.k-1));
 		}
+		return thetaList;
 	}
 }

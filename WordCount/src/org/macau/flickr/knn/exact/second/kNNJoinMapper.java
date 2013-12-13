@@ -23,55 +23,18 @@ import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 import org.macau.spatial.Distance;
 
+
 public class kNNJoinMapper extends
 	Mapper<Object,Text,IntWritable,FlickrPartitionValue>{
 	
 	private final IntWritable outputKey = new IntWritable();
 	private final FlickrPartitionValue outputValue = new FlickrPartitionValue();
 	public static List<FlickrValue> pivotList = new ArrayList<FlickrValue>();
+	
 	public static double[][] LBArray = new double[kNNUtil.REDUCER_NUMBER][kNNUtil.REDUCER_NUMBER];
 	
 
-	
-	/**
-	 * 
-	 * @param R_Partition
-	 * @param S_Partition
-	 * get the theta value for each partition in R.
-	 */
-	public static void boundingkNN(kNNPartition[] R_Partition,kNNPartition[] S_Partition){
-		
-		List<Double> thetaList = new ArrayList<Double>();
-		
-		for(int i = 0; i < kNNUtil.REDUCER_NUMBER;i++){
-			
-			List<Double> topList = new ArrayList<Double>();
-			
-			for(int j = 0; j < kNNUtil.REDUCER_NUMBER;j++){
-				
-				for(int k = 0; k < kNNUtil.REDUCER_NUMBER;k++){
-					
-					double distance = Distance.GreatCircleDistance(R_Partition[i].getLat(),  R_Partition[i].getLon(),  S_Partition[j].getLat(), S_Partition[j].getLon());
-					double upperBound = R_Partition[i].getMaxDistance() + distance + S_Partition[j].getkNNDistance().get(k);
-					
-					if(topList.size() < kNNUtil.REDUCER_NUMBER){
-						
-						topList.add(upperBound);
-						Collections.sort(topList);
-						
-					}else if(topList.get(kNNUtil.REDUCER_NUMBER-1) > upperBound){
-						
-						topList.remove(kNNUtil.REDUCER_NUMBER-1);
-						topList.add(upperBound);
-						Collections.sort(topList);
-					}
-							
-				}
-			}
-			
-			thetaList.add(topList.get(kNNUtil.REDUCER_NUMBER-1));
-		}
-	}
+
 	
 	/**
 	 * compute the Lower bound for each Partition of S
@@ -81,57 +44,32 @@ public class kNNJoinMapper extends
 		for(int j = 0; j < kNNUtil.REDUCER_NUMBER;j++){
 			for(int i = 0;i < kNNUtil.REDUCER_NUMBER;i++){
 				
+//				System.out.println(S_Partition[j].getLat() + ";"+ S_Partition[j].getLon()+ ";" + R_Partition[i].getLat() + ";"+R_Partition[i].getLon());
 				double distance = Distance.GreatCircleDistance(R_Partition[i].getLat(),  R_Partition[i].getLon(),  S_Partition[j].getLat(), S_Partition[j].getLon());
 				
 				LBArray[j][i]= distance - R_Partition[i].getMaxDistance()-thetaList.get(i);
+//				System.out.println(j + "," + i + ";"+ distance + "-" + R_Partition[i].getMaxDistance() + "-"+thetaList.get(i) + LBArray[j][i]);
 						
 			}
 		}
 	}
+	
 	/**
 	 * the setup function complete LB of Replicas
+	 * may want to load the Lower bound for each partition
 	 */
 	protected void setup(Context context) throws IOException, InterruptedException {
 		
 		System.out.println("setup");
 		// compute the Lower Bound of replication
-		
-		
-		
-		
-		/*
-		String path = kNNUtil.pivotOutputPath + "/flickr.kmeans.data";
-		Configuration conf = new Configuration();
-		conf.addResource(new Path("/usr/local/hadoop/conf/core-site.xml"));
-		
-		FileSystem hdfs = FileSystem.get(conf);
-		
-		String value = null;
-		Path pathq = new Path(path);
-		FSDataInputStream fsr = hdfs.open(pathq);
-		BufferedReader bis = new BufferedReader(new InputStreamReader(fsr,"UTF-8")); 
+		List<Double> thetaList = kNNJoinFunction.boundingkNN(kNNJoinJob.R_Partition, kNNJoinJob.S_Partition);
 
-		
-	    while ((value = bis.readLine()) != null) {
-	    	//System.out.println(value);
-	    	FlickrValue fv = new FlickrValue();
-			long id =Long.parseLong(value.toString().split(";")[0]);
-			double lat = Double.parseDouble(value.toString().split(";")[1]);
-			double lon = Double.parseDouble(value.toString().split(";")[2]);
-			long timestamp = Long.parseLong(value.toString().split(";")[3]);
-			
-
-			
-			fv.setId(id);
-			fv.setLat(lat);
-			fv.setLon(lon);
-			fv.setTimestamp(timestamp);
-			
-			pivotList.add(new FlickrValue(fv));
-	    }
-
-		*/
-		
+		compuateLBOfReplica(kNNJoinJob.R_Partition,kNNJoinJob.S_Partition,thetaList);
+//		
+//		int i = 0;
+//		for(double d: thetaList){
+//			System.out.println(i++ + ";"+d);
+//		}
 	}
 	
 	public void map(Object key,Text value,Context context)
@@ -143,26 +81,33 @@ public class kNNJoinMapper extends
 		//R: 0; S:1
 		int dataset = Integer.parseInt(value.toString().split(";")[1]);
 		double distance  = Double.parseDouble(value.toString().split(";")[2]);
-		long id =Long.parseLong(value.toString().split(";")[3]);
+		long id =Long.parseLong(value.toString().split(";")[3].trim());
+		double lat = Double.parseDouble(value.toString().split(";")[4]);
+		double lon = Double.parseDouble(value.toString().split(";")[5].trim());
 		
 		fpv.setPid(pid);
 		fpv.setDataset(dataset);
 		fpv.setDistance(distance);
 		fpv.setId(id);
+		fpv.setLat(lat);
+		fpv.setLon(lon);
 		
 		
 		outputValue.setPid(pid);
 		outputValue.setDataset(dataset);
 		outputValue.setDistance(distance);
 		outputValue.setId(id);
+		outputValue.setLat(lat);
+		outputValue.setLon(lon);
 		
 		//R
 		if(dataset == FlickrSimilarityUtil.R_tag){
 			outputKey.set(pid);
 			
+			
 			context.write(outputKey,outputValue);
 			
-		}else{
+		}else if (dataset == FlickrSimilarityUtil.S_tag){
 			
 			for(int i = 0;i < kNNUtil.REDUCER_NUMBER;i++){
 				if(LBArray[pid][i] < distance){
@@ -171,12 +116,7 @@ public class kNNJoinMapper extends
 				}
 			}
 		}
-		
-		
-
-		
-		
-		context.write(outputKey,outputValue);
+//		System.out.println(outputKey + ":" + outputValue);
 	}
 	
 	/*
@@ -184,7 +124,7 @@ public class kNNJoinMapper extends
 	 * @see org.apache.hadoop.mapreduce.Mapper#cleanup(org.apache.hadoop.mapreduce.Mapper.Context)
 	 */
 	protected void cleanup(Context context) throws IOException, InterruptedException {
-		System.out.println("clean up");
+		System.out.println("kNN join Map clean up");
 		
 		
 	}

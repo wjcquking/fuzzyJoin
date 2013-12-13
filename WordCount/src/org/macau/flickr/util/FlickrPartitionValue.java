@@ -56,6 +56,15 @@ public class FlickrPartitionValue implements Writable{
 	public FlickrPartitionValue(){
 		
 	}
+	public FlickrPartitionValue(FlickrPartitionValue fpv){
+		pid = fpv.pid;
+		dataset = fpv.dataset;
+		distance = fpv.distance;
+		id = fpv.id;
+		lat = fpv.lat;
+		lon = fpv.lon;
+		
+	}
 	public FlickrPartitionValue(int pid,int dataset,double distance,long id){
 		this.pid = pid;
 		this.dataset = dataset;
@@ -64,7 +73,7 @@ public class FlickrPartitionValue implements Writable{
 	}
 	
 	public String toString(){
-		return pid + ";" + dataset + ";" + distance+ ";"+ "id";
+		return pid + ";" + dataset + ";" + distance+ ";"+ id;
 	}
 	
 	@Override

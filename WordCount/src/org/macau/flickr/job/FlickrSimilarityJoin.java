@@ -2,6 +2,7 @@ package org.macau.flickr.job;
 
 import org.apache.hadoop.conf.Configuration;
 import org.macau.flickr.knn.exact.first.PartitionJob;
+import org.macau.flickr.knn.exact.second.kNNJoinJob;
 import org.macau.flickr.spatial.analysis.SpatialAccount;
 import org.macau.flickr.spatial.basic.BasicSpatialRSSimilarityJoin;
 import org.macau.flickr.spatial.grid.GridSpatialSimilarityJoin;
@@ -42,6 +43,11 @@ public class FlickrSimilarityJoin {
 		
 		if(state){
 			System.out.println("Phase One cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
+		}
+		
+		boolean second = kNNJoinJob.spatialPartitionjob(conf);
+		if(second){
+			System.out.println("Phase Two cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
 		}
 	}
 }
