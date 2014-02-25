@@ -21,6 +21,7 @@ import java.io.IOException;
 public class CleanFlickrData {
 	
 	
+	
 	public static void main(String[] args) throws IOException{
 		File f1 = new File("d:\\1.txt");
 		
