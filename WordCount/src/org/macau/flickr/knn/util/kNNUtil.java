@@ -11,9 +11,9 @@ public class kNNUtil {
 	 * exact kNN
 	 */
 	//reducer number
-	public static final int REDUCER_NUMBER = FlickrSimilarityUtil.REDUCER_NUMBER;
+	public static final int REDUCER_NUMBER = 1000;
 
-	public static final int PARTITION_NUMBER = FlickrSimilarityUtil.REDUCER_NUMBER;
+	public static final int PARTITION_NUMBER = 1000;
 	
 	public static final double probability = 0.1;
 	
@@ -26,6 +26,11 @@ public class kNNUtil {
 	//the pivot file position in the DFS
 	public static final String pivotOutputPath = "hdfs://localhost:9000/user/hadoop/pivot";
 	public static final String summaryTablePath = "hdfs://localhost:9000/user/hadoop/summary";
+	
+	
+	//the information get from the data
+	public static final String R_InformationPart = "hdfs://localhost:9000/user/hadoop/r_information";
+	public static final String S_InformationPart = "hdfs://localhost:9000/user/hadoop/s_information";
 	
 	//random selection
 	public static final int RANDOM_SELECTION_T = 20;

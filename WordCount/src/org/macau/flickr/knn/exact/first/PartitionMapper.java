@@ -1,5 +1,8 @@
 package org.macau.flickr.knn.exact.first;
-
+/**
+ * author:
+ * description:
+ */
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,7 +47,6 @@ public class PartitionMapper extends
 		Path pathq = new Path(path);
 		FSDataInputStream fsr = hdfs.open(pathq);
 		BufferedReader bis = new BufferedReader(new InputStreamReader(fsr,"UTF-8")); 
-
 		
 		int count = 0;
 	    while ((value = bis.readLine()) != null) {
@@ -69,10 +71,7 @@ public class PartitionMapper extends
 			fv.setTimestamp(timestamp);
 			
 			pivotList.add(new FlickrValue(fv));
-	    }
-
-		
-		
+	    }	
 	}
 	
 	/**
@@ -99,6 +98,7 @@ public class PartitionMapper extends
 		
 		
 
+		System.out.println(value);
 		long id =Long.parseLong(value.toString().split(";")[0]);
 		double lat = Double.parseDouble(value.toString().split(";")[1]);
 		double lon = Double.parseDouble(value.toString().split(";")[2]);
@@ -107,9 +107,11 @@ public class PartitionMapper extends
 		int minPartition = 0;
 		double dist =0;
 		
+//			System.out.println("ll" + pivotList.size());
 		for(int i = 0; i < pivotList.size();i++){			
 			
 			dist =Distance.GreatCircleDistance(pivotList.get(i).getLat(), pivotList.get(i).getLon(), lat, lon); 
+			
 			
 			if(i == 0){
 				min = dist;
@@ -121,9 +123,11 @@ public class PartitionMapper extends
 				minPartition = i;
 			}
 			
+//				System.out.println("i:"+i + "dist" + dist + "min " + min + "minPartition " + minPartition);
+			
 		}
 		
-		if(tag == 0){
+		if(tag == FlickrSimilarityUtil.R_tag){
 			
 			if(PartitionJob.R_Partition[minPartition].getMinDistance() > dist){
 				
@@ -138,7 +142,7 @@ public class PartitionMapper extends
 			}
 			PartitionJob.R_Partition[minPartition].setCount(PartitionJob.R_Partition[minPartition].getCount()+1);
 			
-		}else if(tag == 1){
+		}else if(tag == FlickrSimilarityUtil.S_tag){
 			
 			if(PartitionJob.S_Partition[minPartition].getkNNDistance().size() < kNNUtil.k){
 				
@@ -175,6 +179,7 @@ public class PartitionMapper extends
 		
 		context.write(outputValue,outputKey);
 	}
+
 	
 	/*
 	 * (non-Javadoc)

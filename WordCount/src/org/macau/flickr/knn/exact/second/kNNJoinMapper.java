@@ -33,7 +33,7 @@ public class kNNJoinMapper extends
 	
 	public static double[][] LBArray = new double[kNNUtil.REDUCER_NUMBER][kNNUtil.REDUCER_NUMBER];
 	
-
+	public static int[] count = new int[kNNUtil.REDUCER_NUMBER]; 
 
 	
 	/**
@@ -47,8 +47,10 @@ public class kNNJoinMapper extends
 //				System.out.println(S_Partition[j].getLat() + ";"+ S_Partition[j].getLon()+ ";" + R_Partition[i].getLat() + ";"+R_Partition[i].getLon());
 				double distance = Distance.GreatCircleDistance(R_Partition[i].getLat(),  R_Partition[i].getLon(),  S_Partition[j].getLat(), S_Partition[j].getLon());
 				
-				LBArray[j][i]= distance - R_Partition[i].getMaxDistance()-thetaList.get(i);
-//				System.out.println(j + "," + i + ";"+ distance + "-" + R_Partition[i].getMaxDistance() + "-"+thetaList.get(i) + LBArray[j][i]);
+				LBArray[j][i]= distance - R_Partition[i].getMaxDistance() - thetaList.get(i);
+				
+//				System.out.println(j + ":" + i + "{" + LBArray[j][i]);
+//				System.out.println("Start:" + j + "," + i + ";"+ distance + ":" + R_Partition[i].getMaxDistance() + ":"+thetaList.get(i) +":"+ LBArray[j][i]);
 						
 			}
 		}
@@ -64,7 +66,14 @@ public class kNNJoinMapper extends
 		// compute the Lower Bound of replication
 		List<Double> thetaList = kNNJoinFunction.boundingkNN(kNNJoinJob.R_Partition, kNNJoinJob.S_Partition);
 
+		for(double d : thetaList){
+			System.out.println("d"+d);
+		}
 		compuateLBOfReplica(kNNJoinJob.R_Partition,kNNJoinJob.S_Partition,thetaList);
+		
+		for(int i = 0; i < kNNUtil.REDUCER_NUMBER;i++){
+			count[i] = 0;
+		}
 //		
 //		int i = 0;
 //		for(double d: thetaList){
@@ -100,17 +109,20 @@ public class kNNJoinMapper extends
 		outputValue.setLat(lat);
 		outputValue.setLon(lon);
 		
+		
 		//R
 		if(dataset == FlickrSimilarityUtil.R_tag){
 			outputKey.set(pid);
-			
 			
 			context.write(outputKey,outputValue);
 			
 		}else if (dataset == FlickrSimilarityUtil.S_tag){
 			
 			for(int i = 0;i < kNNUtil.REDUCER_NUMBER;i++){
+//				System.out.println(pid + "{" + i + "}"+LBArray[pid][i] + "Distance : " + distance);
 				if(LBArray[pid][i] < distance){
+					count[i]++;
+//					System.out.println(pid + ":" + i + ":"+LBArray[pid][i] + "Distance : " + distance);
 					outputKey.set(i);
 					context.write(outputKey,outputValue);
 				}
@@ -126,6 +138,9 @@ public class kNNJoinMapper extends
 	protected void cleanup(Context context) throws IOException, InterruptedException {
 		System.out.println("kNN join Map clean up");
 		
+		for(int i = 0; i < kNNUtil.REDUCER_NUMBER;i++){
+			System.out.println(i + ":" + count[i]);
+		}
 		
 	}
 }

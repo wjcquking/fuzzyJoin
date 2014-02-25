@@ -67,6 +67,16 @@ public class kNNPartition {
 		
 	}
 	
+	public kNNPartition(int pid, double lat,double lon, int count,double minDistance,double maxDistance){
+		this.pid = pid;
+		this.lat = lat;
+		this.lon = lon;
+		this.count = count;
+		this.minDistance = minDistance;
+		this.maxDistance = maxDistance;
+		
+	}
+	
 	public kNNPartition(int pid,double lat,double lon){
 		this.pid = pid;
 		this.count = 0;
@@ -74,6 +84,30 @@ public class kNNPartition {
 		this.lon = lon;
 	}
 	
+	public String toString(){
+		return pid + ";" + lat + ";" + lon + ";" + count + ";" + minDistance + ";" + maxDistance;
+	}
+	
+	public String toStringOfS(){
+		
+		String result = pid + ";" + lat + ";" + lon + ";" + count + ";" + minDistance + ";" + maxDistance  + ";";
+		
+		for(int i = 0;i < kNNDistance.size();i++){
+			
+			if(i == kNNDistance.size()-1){
+				
+				result += kNNDistance.get(i);
+				
+			}else{
+				
+				result += kNNDistance.get(i) + ",";
+				
+			}
+		}
+		
+		return result;
+		
+	}
 	public double getLat() {
 		return lat;
 	}

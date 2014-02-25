@@ -120,6 +120,7 @@ public class kNNJoinFunction {
 			}
 			
 			thetaList.add(topList.get(kNNUtil.k-1));
+			topList.clear();
 		}
 		return thetaList;
 	}

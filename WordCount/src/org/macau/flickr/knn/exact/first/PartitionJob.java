@@ -7,9 +7,7 @@ package org.macau.flickr.knn.exact.first;
  */
 
 import java.io.BufferedWriter;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.net.URI;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -17,14 +15,11 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.util.Progressable;
 import org.macau.flickr.knn.util.kNNUtil;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 
 
 public class PartitionJob {
@@ -80,8 +75,52 @@ public class PartitionJob {
 			 * The best way is that each mapper write the statistic to the DFS
 			 * and another program read the files from the DFS and get the statistic
 			 */
+//		
+//			
+			Configuration conf1 = new Configuration();
+			conf1.addResource(new Path("/usr/local/hadoop/conf/core-site.xml"));
+			
+			FileSystem hdfs = FileSystem.get(conf1);
+			
+			Path rPath = new Path(kNNUtil.R_InformationPart + "/" + "r." + job.getJobID() + ".data");
+			Path sPath = new Path(kNNUtil.S_InformationPart + "/" + "s." + job.getJobID() + ".data");
+			
+			if(hdfs.exists(rPath)){
+				
+				hdfs.delete(rPath, true);
+				
+			}
+			
+			if(hdfs.exists(sPath)){
+				hdfs.delete(sPath,true);
+			}
+			
+			
+//			FSDataInputStream fsr = hdfs.open(rPath);
+			FSDataOutputStream r_fos = hdfs.create(rPath);
+			FSDataOutputStream s_fos = hdfs.create(sPath);
+			
+			
+//			BufferedReader bis = new BufferedReader(new InputStreamReader(fsr,"UTF-8")); 
+			
+			BufferedWriter r_Writer = new BufferedWriter(new OutputStreamWriter(r_fos,"UTF-8"));
+			BufferedWriter s_Writer = new BufferedWriter(new OutputStreamWriter(s_fos,"UTF-8"));
+			
+			for(kNNPartition s : S_Partition){
+				s_Writer.write(s.toStringOfS() + "\r\n");
+			}
+			
+			for(kNNPartition r : R_Partition){
+				r_Writer.write(r.toString() + "\r\n");
+			}
+			
 		
 			
+			r_Writer.close();
+			s_Writer.close();
+			
+			hdfs.close();
+//			
 			
 			
 			return true;

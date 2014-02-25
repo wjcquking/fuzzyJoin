@@ -73,6 +73,7 @@ public class FlickrPartitionValue implements Writable{
 	}
 	
 	public String toString(){
+//		return lat + "        ";
 		return pid + ";" + dataset + ";" + distance+ ";"+ id;
 	}
 	

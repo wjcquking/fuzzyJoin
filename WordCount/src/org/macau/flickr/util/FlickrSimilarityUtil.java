@@ -18,7 +18,7 @@ public class FlickrSimilarityUtil {
 	
 	public static final int MACHINE_NUNBER = 3;
 	//three machine and each has two reduces
-	public static final int REDUCER_NUMBER = 24;
+	public static final int REDUCER_NUMBER = 100;
 	
 	//the tile number of each line
 	public static final int TILE_NUMBER_EACH_LINE = 100;

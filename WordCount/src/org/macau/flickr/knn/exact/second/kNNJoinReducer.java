@@ -39,22 +39,25 @@ public class kNNJoinReducer extends
 	}
 	
 	
-	
+	//the most reasonable reason is the I forget to clear the value of R or S
 	public void reduce(IntWritable key,Iterable<FlickrPartitionValue> values, Context context)
 		throws IOException,InterruptedException{
 		
 		kNNPartition R_Partition = new kNNPartition();
+		R_Partition.getFlickrPartitionValueList().clear();
 		List<kNNPartition> S_SortPartition = new ArrayList<kNNPartition>();
 		
+		int s_Count = 0;
 		for(int i = 0; i < kNNUtil.REDUCER_NUMBER;i++){
 			S_SortPartition.add(new kNNPartition(kNNJoinJob.S_Partition[i]));
 			S_SortPartition.get(i).setCount(0);
+			S_SortPartition.get(i).getFlickrPartitionValueList().clear();
 		}
 		
 //		System.out.println("size 0=:" + S_SortPartition.size());
 //		Map<Integer, Double> keyfreqs = new HashMap<Integer, Double>();
 
-		List<FlickrPartitionValue> R_List = new ArrayList<FlickrPartitionValue>();
+//		List<FlickrPartitionValue> R_List = new ArrayList<FlickrPartitionValue>();
 		
 		/*
 		for(int i = 0;i < kNNUtil.REDUCER_NUMBER;i++){
@@ -81,7 +84,7 @@ public class kNNJoinReducer extends
 		
 		//parse Pi(R) and Si
 		for(FlickrPartitionValue val : values){
-			
+			s_Count++;
 			//R set
 			if(val.getDataset() == FlickrSimilarityUtil.R_tag){
 				if(R_Partition.getFlickrPartitionValueList().size() == 0){
@@ -136,23 +139,27 @@ public class kNNJoinReducer extends
 			}
 		}
 		
-//		System.out.println("size 7 : " + S_SortPartition.size());
+		System.out.println("size 7 : " + S_SortPartition.size());
 		for(int i = 0,len = S_SortPartition.size(); i < len;i++){
 			if(S_SortPartition.get(i).getCount() == 0){
+//				S_SortPartition.get(i).getFlickrPartitionValueList().clear();
 				S_SortPartition.remove(i);
 				--len;
 				--i;
 			}
 		}
-//		System.out.println("size " + S_SortPartition.size());
-		for(int i = 0; i < S_SortPartition.size();i++){
-//			System.out.println(R_Partition.getLat()+ "ii"+R_Partition.getLon()+"wid : " + S_SortPartition.get(i).getLat());
-//			System.out.println(R_Partition.getCount() + "rr" + S_SortPartition.get(i).getCount());
-		}
+		System.out.println("size " + S_SortPartition.size());
+//		for(int i = 0; i < S_SortPartition.size();i++){
+////			System.out.println(R_Partition.getLat()+ "ii"+R_Partition.getLon()+"wid : " + S_SortPartition.get(i).getLat());
+////			System.out.println(R_Partition.getCount() + "rr" + S_SortPartition.get(i).getCount());
+//		}
 		double theta = kNNJoinFunction.boundingkNN(R_Partition, S_SortPartition);
 		
-//		System.out.println("theta" + theta);
+		System.out.println("theta" + theta);
 		
+		System.out.println("S Count" + s_Count);
+		
+		System.out.println("size of R : " + R_Partition.getFlickrPartitionValueList().size());
 		for(FlickrPartitionValue r: R_Partition.getFlickrPartitionValueList()){
 			
 			outputKey = new FlickrPartitionValue(r);
@@ -161,7 +168,11 @@ public class kNNJoinReducer extends
 			
 			double r_Pr = Distance.GreatCircleDistance(r.getLat(), r.getLon(), R_Partition.getLat(), R_Partition.getLon());
 			
+			int  count = 0;
 			for(kNNPartition s_Partition: S_SortPartition){
+				
+				count += s_Partition.getCount();
+				
 //				System.out.println("oo" + r.getLat()+" "+r.getLon()+" "+s_Partition.getLat()+" "+s_Partition.getLon() );
 				double r_Ps = Distance.GreatCircleDistance(r.getLat(), r.getLon(), s_Partition.getLat(), s_Partition.getLon());
 				
@@ -210,17 +221,22 @@ public class kNNJoinReducer extends
 					}
 				}
 			}
-			
+			System.out.println("size S "+ count);
 			String result = "";
 			for(FlickrPartitionValue fpv : topList){
 				result += fpv.toString() + "%";
 			}
 			outputValue.set(result);
+			
+//			for(kNNPartition k : S_SortPartition){
+//				k.getFlickrPartitionValueList().clear();
+//			}
 //			System.out.println("the topList" + topList.size());
 //			System.out.println("final " + outputKey + "-----" + outputValue);
 			context.write(outputKey, outputValue);
 		}
 		
+		System.out.println(R_Partition.getCount());
 		
 	}
 	

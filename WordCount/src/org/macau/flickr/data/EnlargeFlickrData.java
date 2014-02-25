@@ -41,7 +41,7 @@ public class EnlargeFlickrData {
             int count = 0;
             while((str = br.readLine()) != null) {
             	count++;
-            	if(count %2 != 0){
+            	if(count < 60000 && count %2 == 0){
                   sb.append(str +"\r\n");
             	}
                  
@@ -52,7 +52,7 @@ public class EnlargeFlickrData {
             reader.close();
            
             // write string to file
-            FileWriter writer = new FileWriter("//home//hadoop//Dropbox//hadoop//input//flickr.even.data");
+            FileWriter writer = new FileWriter("//home//hadoop//Dropbox//hadoop//input//flickr.odd.data");
             BufferedWriter bw = new BufferedWriter(writer);
             bw.write(sb.toString());
            
