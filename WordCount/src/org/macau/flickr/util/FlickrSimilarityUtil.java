@@ -1,14 +1,15 @@
 package org.macau.flickr.util;
 
+import org.macau.local.util.FlickrData;
 import org.macau.spatial.Distance;
 
 public class FlickrSimilarityUtil {
 
 	//time threshold
-	public static final long TEMPORAL_THRESHOLD = 24*3600*1000;
+	public static final long TEMPORAL_THRESHOLD = 365*24*3600*1000;
 	
 	//spatial threshold, Unit : km
-	public static final double DISTANCE_THRESHOLD = 0.001;
+	public static final double DISTANCE_THRESHOLD = 0.0001;
 	 
 	//textual threshold
 	public static final double TEXTUAL_THRESHOLD = 0.6;
@@ -62,6 +63,13 @@ public class FlickrSimilarityUtil {
 		
 	}
 	
+	
+	public static boolean TemporalSimilarity(FlickrData value1,FlickrData value2){
+		
+		return Math.abs(value1.getTimestamp()- value2.getTimestamp()) < TEMPORAL_THRESHOLD;
+		
+	}
+	
 	/**
 	 * 
 	 * @param value1
@@ -71,6 +79,11 @@ public class FlickrSimilarityUtil {
 	public static boolean SpatialSimilarity(FlickrValue value1, FlickrValue value2){
 		return Distance.GreatCircleDistance(value1.getLat(), value1.getLon(), value2.getLat(), value2.getLon()) < DISTANCE_THRESHOLD;
 	}
+	
+	public static boolean SpatialSimilarity(FlickrData value1, FlickrData value2){
+		return Distance.GreatCircleDistance(value1.getLat(), value1.getLon(), value2.getLat(), value2.getLon()) < DISTANCE_THRESHOLD;
+	}
+	
 	
 	/**
 	 * 
