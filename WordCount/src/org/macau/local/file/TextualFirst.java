@@ -1,22 +1,28 @@
 package org.macau.local.file;
 
+/**
+ * Author: mb25428
+ * Create Date:  2/27/2014
+ *
+ * Comments: this is for textual join 
+ * JDK version: <JDK 1.7>
+ *
+ * Modified By: mb25428
+ * Modified Date: 4/3/2013
+ * Why&What is Modified: refine whether the textual similarity join algorithm is right or not 
+ *
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.hadoop.io.Text;
-import org.macau.flickr.temporal.TemporalUtil;
-import org.macau.flickr.util.FlickrSimilarityUtil;
-import org.macau.join.phase2.ValueSelfJoin;
 import org.macau.local.util.FlickrData;
 import org.macau.local.util.FlickrDataLocalUtil;
 import org.macau.paper.SimilarityFiltersFactory;
-import org.macau.similarity.PartialIntersect;
-import org.macau.similarity.SimilarityMetric;
 import org.macau.similarity.SimilarityFilters;
-import org.macau.token.TokenSimilarity;
 
 public class TextualFirst {
 	
@@ -46,9 +52,9 @@ public class TextualFirst {
 		Map<Long,ArrayList<FlickrData>> map = new HashMap<Long,ArrayList<FlickrData>>();
 	
 		int count = 0;
-		for (int i = 0; i < 5000; i++) {
+		for (int i = 0; i < 10; i++) {
 		    FlickrData rec1 = records.get(i);
-		    for (int j = i + 1; j < 5000; j++) {
+		    for (int j = i + 1; j < 10; j++) {
 		    	FlickrData rec2 = records.get(j);
 		        
 		        int[] tokens1 = rec1.getTokens();
@@ -57,9 +63,10 @@ public class TextualFirst {
 		
 		        double similarity = getTokenSimilarity(rec1.getTextual(), rec2.getTextual());
 		
+		        System.out.println(rec1.getTextual());
+		        System.out.println(rec2.getTextual());
+		        System.out.println(similarity + ":" + similarityThreshold);
 		        if (similarity >= similarityThreshold) {
-//		        	System.out.println(rec1.getTextual());
-//		        	System.out.println(rec2.getTextual());
 		            long ridA = rec1.getId();
 		            long ridB = rec2.getId();
 		            if (ridA < ridB) {

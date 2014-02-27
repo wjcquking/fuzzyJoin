@@ -6,10 +6,11 @@ import org.macau.spatial.Distance;
 public class FlickrSimilarityUtil {
 
 	//time threshold
-	public static final long TEMPORAL_THRESHOLD = 365*24*3600*1000;
+	// the "L" is very important
+	public static final long TEMPORAL_THRESHOLD = 70L*86400000L;
 	
 	//spatial threshold, Unit : km
-	public static final double DISTANCE_THRESHOLD = 0.0001;
+	public static final double DISTANCE_THRESHOLD = 0.001;
 	 
 	//textual threshold
 	public static final double TEXTUAL_THRESHOLD = 0.6;
