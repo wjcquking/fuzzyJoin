@@ -32,42 +32,35 @@ public class TemporalJoinMapper extends
 		return new Date(date);
 	}
 	
+	public static int getTagByFileName(String fileName){
+		
+		if(fileName.contains(FlickrSimilarityUtil.R_TAG)){
+			
+			return FlickrSimilarityUtil.R_tag;
+			
+		}else{
+			return FlickrSimilarityUtil.S_tag;
+		}
+		
+	}
+	
 	
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
 		
 		InputSplit inputSplit = context.getInputSplit();
-		
-		//R: 0; S:1
-		int tag;
-		
+				
 		//get the the file name which is used for separating the different set
 		String fileName = ((FileSplit)inputSplit).getPath().getName();
 				
 		
-		
-		if(fileName.contains(FlickrSimilarityUtil.R_TAG)){
-			
-			tag = 0;
-			
-		}else{
-			tag = 1;
-		}
+		int tag = getTagByFileName(fileName);
 		
 		long id =Long.parseLong(value.toString().split(":")[0]);
 		double lat = Double.parseDouble(value.toString().split(":")[2]);
 		double lon = Double.parseDouble(value.toString().split(":")[3]);
 		long timestamp = Long.parseLong(value.toString().split(":")[4]);
 		
-		
-		/* Convert the timestamp to the Date
-		 * use the day as key
-		 * the all value as a value
-		 * use the timestamp to refine and compare the distance
-		 */
-		
-//		long previousTimeStamp = timestamp - MS_OF_ONE_DAY;
-//		long laterTimestamp = timestamp + MS_OF_ONE_DAY;
 		
 		long timeInterval = timestamp / FlickrSimilarityUtil.TEMPORAL_THRESHOLD;
 		
@@ -84,7 +77,6 @@ public class TemporalJoinMapper extends
 		
 		outputValue.setTimestamp(timestamp);
 		
-//		System.out.println("map" + (timeInterval/10 + 1));
 		
 		if(timeInterval % 10 == 9){
 			
