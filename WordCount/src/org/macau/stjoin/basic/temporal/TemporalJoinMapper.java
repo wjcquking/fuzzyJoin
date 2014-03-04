@@ -2,6 +2,8 @@ package org.macau.stjoin.basic.temporal;
 
 /**
  * The Mapper uses the temporal information
+ * R send same number 
+ * S send one more time interval 
  * 
  */
 import java.io.IOException;
@@ -71,16 +73,17 @@ public class TemporalJoinMapper extends
 		outputValue.setLat(lat);
 		outputValue.setLon(lon);
 		outputValue.setTag(tag);
+		outputValue.setTiles(value.toString().split(":")[5]);
 		
 		//the textual information
-		outputValue.setTiles(value.toString().split(":")[5]);
+//		System.out.println(value.toString().split(":")[5]);
 		
 		outputValue.setTimestamp(timestamp);
 		
 		
-		if(timeInterval % 10 == 9){
+		if(tag == FlickrSimilarityUtil.S_tag && timeInterval % 10 == 0){
 			
-			outputKey.set(timeInterval/10 + 1);
+			outputKey.set(timeInterval/10 - 1);
 			context.write(outputKey, outputValue);
 			
 		}
