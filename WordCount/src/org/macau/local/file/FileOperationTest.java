@@ -126,6 +126,16 @@ public class FileOperationTest {
         return textual;
     }
 	
+	public static void readRecord(){
+		
+	}
+	
+	
+	public static void readTextual(){
+		
+	}
+	
+	
 	public static void main(String[] args){
 		System.out.println("Get The file of Paris");
 		String path = "C:/Users/mb25428/Dropbox/06-hadoop/01-Data/Flickr/InitData/InitData/ParisDataProBuf.data";
@@ -137,13 +147,13 @@ public class FileOperationTest {
 		System.out.println(records.length);
 		System.out.println(textual.length);
 		
-		String outputPath ="D:\\paris.txt";
+		String outputPath ="D:\\paris.even.10000.data";
 		try
 		{
 
 			FileWriter writer = new FileWriter(outputPath);
 			
-			for(int i = 0; i < records.length;i++){
+			for(int i = 0; i < 10000;i+=2){
 				writer.write(records[i] +separator + textual[i] +"\n");;
 			}
 			
