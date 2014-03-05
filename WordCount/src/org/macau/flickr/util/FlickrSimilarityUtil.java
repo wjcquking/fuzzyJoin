@@ -1,5 +1,9 @@
 package org.macau.flickr.util;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.macau.local.util.FlickrData;
 import org.macau.spatial.Distance;
 
@@ -7,10 +11,10 @@ public class FlickrSimilarityUtil {
 
 	//time threshold
 	// the "L" is very important
-	public static final long TEMPORAL_THRESHOLD = 70L*86400000L;
+	public static final long TEMPORAL_THRESHOLD = 1L*86400000L;
 	
 	//spatial threshold, Unit : km
-	public static final double DISTANCE_THRESHOLD = 0.001;
+	public static final double DISTANCE_THRESHOLD = 0.00014;
 	 
 	//textual threshold
 	public static final double TEXTUAL_THRESHOLD = 0.6;
@@ -23,11 +27,11 @@ public class FlickrSimilarityUtil {
 	public static final int REDUCER_NUMBER = 100;
 	
 	//the tile number of each line
-	public static final int TILE_NUMBER_EACH_LINE = 100;
+	public static final int TILE_NUMBER_EACH_LINE = 10;
 	
 	public static final int TOTAL_TILE_NUMBER = TILE_NUMBER_EACH_LINE * TILE_NUMBER_EACH_LINE;
 	
-	public static final int PARTITION_NUMBER = 6;
+	public static final int PARTITION_NUMBER = 60;
 	
 	/* For the data of Paris flickr image picture
 	 * If We know the data,we can split the whole universe
@@ -63,12 +67,43 @@ public class FlickrSimilarityUtil {
 		return Math.abs(value1.getTimestamp()- value2.getTimestamp()) < TEMPORAL_THRESHOLD;
 		
 	}
+	public static int getTagByFileName(String fileName){
+		
+		if(fileName.contains(R_TAG)){
+			
+			return R_tag;
+			
+		}else{
+			return S_tag;
+		}
+		
+	}
 	
 	
 	public static boolean TemporalSimilarity(FlickrData value1,FlickrData value2){
 		
 		return Math.abs(value1.getTimestamp()- value2.getTimestamp()) < TEMPORAL_THRESHOLD;
 		
+	}
+	
+	/**
+	 * 
+	 * @param iToken
+	 * @param jToken
+	 * @return the similarity value of two tokens
+	 * 
+	 */
+	public static double getTokenSimilarity(String iToken,String jToken){
+		
+		List<String> itext = new ArrayList<String>(Arrays.asList(iToken.split(";")));
+		List<String> jtext = new ArrayList<String>(Arrays.asList(jToken.split(";")));
+		
+		int i_num = itext.size();
+		int j_num = jtext.size();
+		jtext.retainAll(itext);
+		int numOfIntersection = jtext.size();
+		
+		return (double)numOfIntersection/(double)(i_num+j_num-numOfIntersection);
 	}
 	
 	/**
@@ -85,6 +120,10 @@ public class FlickrSimilarityUtil {
 		return Distance.GreatCircleDistance(value1.getLat(), value1.getLon(), value2.getLat(), value2.getLon()) < DISTANCE_THRESHOLD;
 	}
 	
+	public static boolean TextualSimilarity(FlickrValue value1, FlickrValue value2){
+		return getTokenSimilarity(value1.getTiles(), value2.getTiles()) > TEXTUAL_THRESHOLD;
+	}
+	
 	
 	/**
 	 * 
@@ -94,5 +133,28 @@ public class FlickrSimilarityUtil {
 	 */
 	public static double SpatialDistance(FlickrValue value1, FlickrValue value2){
 		return Distance.GreatCircleDistance(value1.getLat(), value1.getLon(), value2.getLat(), value2.getLon());
+	}
+	
+	/**
+	 * 
+	 * @param value which read in the raw file
+	 * @return the FlickrValue which gets from the String value
+	 */
+	public static FlickrValue getFlickrVallueFromString(String value){
+		
+		FlickrValue outputValue = new FlickrValue();
+		
+		long id =Long.parseLong(value.toString().split(":")[0]);
+		double lat = Double.parseDouble(value.toString().split(":")[2]);
+		double lon = Double.parseDouble(value.toString().split(":")[3]);
+		long timestamp = Long.parseLong(value.toString().split(":")[4]);
+		
+		outputValue.setId(id);
+		outputValue.setLat(lat);
+		outputValue.setLon(lon);
+		outputValue.setTiles(value.toString().split(":")[5]);
+		outputValue.setTimestamp(timestamp);
+		
+		return outputValue;
 	}
 }
