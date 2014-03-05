@@ -168,7 +168,7 @@ Reducer<IntWritable, FlickrValue, Text, Text>{
 		long rC =0;
 		System.out.println("R data set");
 		for(long i : rCount){
-//			System.out.println(i);
+			System.out.println(i);
 			if(i > rMax){
 				rMax = i;
 			}
@@ -226,7 +226,8 @@ Reducer<IntWritable, FlickrValue, Text, Text>{
 		System.out.println("T compare Count " + tCompareCount);
 		System.out.println("S compare Count " + sCompareCount);
 		System.out.println("Textual Compare Count " + oCompareCount);
-		System.out.println("The total Count " + (tCompareCount+ sCompareCount + oCompareCount));
+		wCompareCount = tCompareCount+ sCompareCount + oCompareCount;
+		System.out.println("The total Count " + wCompareCount);
 		
 		
 	}
