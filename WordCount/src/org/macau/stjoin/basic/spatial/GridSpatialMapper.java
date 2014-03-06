@@ -186,13 +186,13 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 			tileList = tileNumberOfS(lat,lon);
 		}
 		
-		System.out.println(tileList.toString());
+//		System.out.println(tileList.toString());
 		
 //		outputValue.setTiles(tileList.toString().substring(1, tileList.toString().length()-1));
 		
 		outputValue.setTiles(value.toString().split(":")[5]);
 		
-		System.out.println(outputValue.getTiles());
+//		System.out.println(outputValue.getTiles());
 		/*
 		 * for R, there is only need one tile
 		 * but for S, the data should send to other tiles
@@ -201,6 +201,7 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		
 			outputValue.setTileNumber(tile);
 			outputKey.set(GridPartition.paritionNumber(tile));
+//			outputKey.set(tile);
 			context.write(outputKey, outputValue);
 			
 		}

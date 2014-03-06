@@ -34,18 +34,6 @@ public class TemporalJoinMapper extends
 		return new Date(date);
 	}
 	
-	public static int getTagByFileName(String fileName){
-		
-		if(fileName.contains(FlickrSimilarityUtil.R_TAG)){
-			
-			return FlickrSimilarityUtil.R_tag;
-			
-		}else{
-			return FlickrSimilarityUtil.S_tag;
-		}
-		
-	}
-	
 	
 	public void map(Object key, Text value, Context context)
 			throws IOException, InterruptedException {
@@ -56,7 +44,7 @@ public class TemporalJoinMapper extends
 		String fileName = ((FileSplit)inputSplit).getPath().getName();
 				
 		
-		int tag = getTagByFileName(fileName);
+		int tag = FlickrSimilarityUtil.getTagByFileName(fileName);
 		
 		long id =Long.parseLong(value.toString().split(":")[0]);
 		double lat = Double.parseDouble(value.toString().split(":")[2]);
