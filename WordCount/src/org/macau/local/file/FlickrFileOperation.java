@@ -2,7 +2,7 @@ package org.macau.local.file;
 
 /**
  * author: wangjian
- * descrition: Get the Data from YYY about the Flickr
+ * description: Get the Data from YYY about the Flickr
  * 
  */
 import java.io.BufferedReader;
@@ -135,15 +135,14 @@ public class FlickrFileOperation {
 	}
 	
 	
-	public static void main(String[] args){
+	public static void createData(int number, int startPoint){
 		
 		System.out.println("Get The file of Paris");
-		String path = "C:/Users/mb25428/Dropbox/06-hadoop/01-Data/Flickr/InitData/InitData/ParisDataProBuf.data";
-		String[] records = readFileByLines(path);
+		String[] records = readFileByLines(FlickrDataLocalUtil.rawRecordPath);
 		
 		System.out.println("Get the textual information of Paris");
-		String textualPath = "C:/Users/mb25428/Dropbox/06-hadoop/01-Data/Flickr/Tag/ParisRawPhtToTags.txt";
-		String[] textual = readTextualByLines(textualPath);
+		
+		String[] textual = readTextualByLines(FlickrDataLocalUtil.rawTextualPath);
 		
 		System.out.println(records.length);
 		System.out.println(textual.length);
@@ -154,7 +153,7 @@ public class FlickrFileOperation {
 
 			FileWriter writer = new FileWriter(outputPath);
 			
-			for(int i = 0; i < 10000;i+=2){
+			for(int i = startPoint; i < number;i+=2){
 				writer.write(records[i] + FlickrDataLocalUtil.separator + textual[i] +"\n");;
 			}
 			
@@ -166,5 +165,39 @@ public class FlickrFileOperation {
 		{
 			System.out.println("Problemwriting" + outputPath);
 		}
+	}
+	public static void main(String[] args){
+		createData(10000,0);
+		
+		
+//		System.out.println("Get The file of Paris");
+//		String path = "C:/Users/mb25428/Dropbox/06-hadoop/01-Data/Flickr/InitData/InitData/ParisDataProBuf.data";
+//		String[] records = readFileByLines(path);
+//		
+//		System.out.println("Get the textual information of Paris");
+//		String textualPath = "C:/Users/mb25428/Dropbox/06-hadoop/01-Data/Flickr/Tag/ParisRawPhtToTags.txt";
+//		String[] textual = readTextualByLines(textualPath);
+//		
+//		System.out.println(records.length);
+//		System.out.println(textual.length);
+//		
+//		String outputPath ="D:\\paris.even.10000.data";
+//		try
+//		{
+//
+//			FileWriter writer = new FileWriter(outputPath);
+//			
+//			for(int i = 0; i < 10000;i+=2){
+//				writer.write(records[i] + FlickrDataLocalUtil.separator + textual[i] +"\n");;
+//			}
+//			
+//			//close the write
+//			writer.close();
+//		}
+//		
+//		catch(IOException iox)
+//		{
+//			System.out.println("Problemwriting" + outputPath);
+//		}
 	}
 }

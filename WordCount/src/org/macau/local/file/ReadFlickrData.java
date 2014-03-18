@@ -16,7 +16,6 @@ public class ReadFlickrData {
         BufferedReader reader = null;
         ArrayList<FlickrData> records = new ArrayList<FlickrData>();
         try {
-            System.out.println("Read one line");
             reader = new BufferedReader(new FileReader(file));
             String tempString = null;
             int line = 1;
