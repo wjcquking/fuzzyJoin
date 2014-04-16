@@ -7,10 +7,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.spatial.ZOrderValue;
@@ -68,43 +70,134 @@ public class SpatialSample {
 		writer.close();
 	}
 	
-	public static void spatialOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap){
+	
+	
+	public static int getZOrder(FlickrData rFlickrData){
 		
-		int max = 0;
-		Iterator iter = accountMap.entrySet().iterator();
-		while(iter.hasNext()){
-			Map.Entry<Integer, Integer> entry = (Map.Entry<Integer, Integer>)iter.next();
-			
-			if(entry.getValue() > max){
-				max = entry.getValue();
-			}
+		int latTile =(int)(rFlickrData.getLat()/Math.sqrt(FlickrSimilarityUtil.DISTANCE_THRESHOLD));
+        int lonTile = (int)(rFlickrData.getLon()/Math.sqrt(FlickrSimilarityUtil.DISTANCE_THRESHOLD));
+		int zOrder = ZOrderValue.parseToZOrder(latTile, lonTile);
+		return zOrder;
+		
+	}
+	
+	public static int getWeight(Map<Integer,Integer> accountMap,int key){
+		
+		int weight =0;
+		if(accountMap.get(key) == null){
+			weight= 0;
+		}else{
+			weight = accountMap.get(key);
 		}
+		return weight;
+		
+	}
+	
+	/**
+	 * 
+	 * @param rRecords
+	 * @param r
+	 * @param accountMap
+	 * 
+	 * get the selectivity of the spatial join
+	 * 
+	 */
+	public static void spatialOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap,int sSize){
+		
+		int max = OlkenSampleAlgorithm.getMaxValue(accountMap);
+		
+		int candidateWeightSum = 0;
+		
+		
+		for(FlickrData rFlickrData : rRecords){
+			
+			int zOrder = getZOrder(rFlickrData);
+			
+			int weight= 0;
+			
+			if(accountMap.get(zOrder) == null){
+				weight= 0;
+			}else{
+				weight = accountMap.get(zOrder);
+			}
+			candidateWeightSum+=weight;
+			
+		}
+		
+		int[] iterationCount = new int[r];
+		
+		Map<Integer,List<FlickrData>> weightedListMap = SpatialBlackBoxWR2.getSpatialListData(FlickrDataLocalUtil.sDataPath);
+		
 		
 		for(int i = 0;i < r;i++){
 			
 			boolean accept = false;
+			
 			while(accept == false){
+				
+				iterationCount[i]++;
+				
 				Random random = new Random();
+				
 				FlickrData rFlickrData = rRecords.get(random.nextInt(rRecords.size()));
-				int latTile =(int)(rFlickrData.getLat()/Math.sqrt(FlickrSimilarityUtil.DISTANCE_THRESHOLD));
-                int lonTile = (int)(rFlickrData.getLon()/Math.sqrt(FlickrSimilarityUtil.DISTANCE_THRESHOLD));
-				int zOrder = ZOrderValue.parseToZOrder(latTile, lonTile);
-				double p = accountMap.get(zOrder) / (double)max;
 				
+				int zOrder = getZOrder(rFlickrData);
+				int weight= getWeight(accountMap,zOrder);
+
+				
+				double p = (double)weight/max;
 				Random acceptRandom = new Random();
+				double pro =acceptRandom.nextDouble();
 				
-				if(acceptRandom.nextDouble() < p){
+				if( pro <= p ){
+			
+					Random listRandom = new Random();
 					
 					FlickrData sFlickrData = new FlickrData();
 					
-					accept = true;
-					System.out.println(rFlickrData + "%" + sFlickrData);
+					if(weightedListMap.get(zOrder) != null){
+						
+						sFlickrData = weightedListMap.get(zOrder).get(listRandom.nextInt(weightedListMap.get(zOrder).size()));
+						
+					}
 					
+					
+					if(FlickrSimilarityUtil.SpatialSimilarity(rFlickrData, sFlickrData)){
+						
+						accept = true;
+						System.out.println(p + "  "+ iterationCount[i]+"    "+weight+"  "+weightedListMap.get(zOrder).size()+ "   "+ rFlickrData + "%" + sFlickrData);
+						
+					}
 				}
 			}
 		}
+		
+		double sum = 0;
+		double account = 0;
+		for(int i:iterationCount){
+			sum+=i;
+			account+=1;
+		}
+		
+		double expectedValue = sum/account;
+		
+		System.out.println("The account Map size" + accountMap.size());
+		System.out.println("the iteration count sum is " + sum + ":" + account );
+		System.out.println("the account Map max is " + max);
+		System.out.println("candinate count of all record in R is " + candidateWeightSum);
+		
+		System.out.println("The expected value is " + expectedValue);
+		
+		double selectivity = (double)max/(expectedValue * sSize);
+		
+		System.out.println("the selectivity is "+selectivity);
+		
 	}
 	
+	
+	public static void OlkenRAJOIN(){
+		
+	}
 	public static void spatialStreamSample(){
 		
 		//1. first get r sample data from R Using WR2
@@ -114,10 +207,17 @@ public class SpatialSample {
 		
 	}
 	
-	public static void spatialGropuSample(int r){
+	/**
+	 * 
+	 * @param r
+	 */
+	public static void spatialGroupSample(int r){
 			FlickrData[] reservoirArray = SpatialBlackBoxWR2.weightedBlackBoxWR2ofSpatial(FlickrDataLocalUtil.rDataPath,r,SpatialBlackBoxWR2.getSpatialWeightedData(FlickrDataLocalUtil.sDataPath));
 			
 			Map<FlickrData,List<FlickrData>> sampleResult = new HashMap<FlickrData,List<FlickrData>>();
+			
+			Set<String> rSet = new HashSet<String>();
+			Set<String> sSet = new HashSet<String>();
 			
 			
 			for(FlickrData fd : reservoirArray){
@@ -169,8 +269,28 @@ public class SpatialSample {
 			int i = 0;
 			while(iter.hasNext()){
 				Map.Entry<FlickrData,List<FlickrData>> entry = (Map.Entry<FlickrData,List<FlickrData>>)iter.next();
+				rSet.add(entry.getKey().getLat() + ":" + entry.getKey().getLon());
+				FlickrData s = TextualSample.BlackBoxU2ofTextual(1,entry.getValue());
+				sSet.add(s.getLat() + ":" + s.getLon());
 				System.out.println(i++ + "   " + entry.getKey() +"   "+ BlackBoxU2ofSpatial(1,entry.getValue()));
 			}
+			
+			int m = 0;
+			for(String record: rSet){
+				for(String s : sSet){
+					
+					if(record != null && s != null){
+						if(FlickrSimilarityUtil.getDistance(record, s) > FlickrSimilarityUtil.DISTANCE_THRESHOLD){
+							System.out.println(m++);
+							System.out.println(record + "    " + s);
+						}
+					}
+				}
+			}
+			
+			System.out.println(rSet.size());
+			System.out.println(sSet.size());
+			System.out.println(m);
 	}
 	
 	/**
@@ -198,7 +318,13 @@ public class SpatialSample {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param r the sample size
+	 * @param t
+	 */
 	public static void spatialFrequencyPartitionSample(int r, int t){
+		
 		Map<Integer,Integer> weightMap = SpatialBlackBoxWR2.getSpatialWeightedData(FlickrDataLocalUtil.sDataPath);
 		
 		Iterator iter = weightMap.entrySet().iterator();
@@ -215,6 +341,7 @@ public class SpatialSample {
 	}
 	public static void main(String[] args) throws IOException{
 		
-		spatialGropuSample(4000);
+//		spatialGroupSample(10000);
+		spatialOlkenSample(ReadFlickrData.readFileBySampling(FlickrDataLocalUtil.rDataPath,1),1000,SpatialBlackBoxWR2.getSpatialWeightedData(FlickrDataLocalUtil.sDataPath),10000);
 	}
 }
