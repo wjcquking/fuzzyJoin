@@ -35,22 +35,22 @@ public class TemporalFirst {
 		
 		FileWriter writer = new FileWriter(FlickrDataLocalUtil.resultPath);
 		for (int i = 0; i < rRecords.size(); i++) {
-			
+			System.out.println(i);
 			FlickrData rec1 = rRecords.get(i);
 			
 		    for (int j = 0; j < sRecords.size(); j++) {
 		    	
 		    	FlickrData rec2 = sRecords.get(j);
 		    	
-		    		if(FlickrSimilarityUtil.TemporalSimilarity(rec1, rec2)){
+//		    		if(FlickrSimilarityUtil.TemporalSimilarity(rec1, rec2)){
 		    	
-		    		firstCount++;
+//		    		firstCount++;
 		    		if(FlickrSimilarityUtil.SpatialSimilarity(rec1, rec2)){
 		    		
 		    		
 		    			SecondCount++;
 		    				
-		    			if (FlickrSimilarityUtil.TextualSimilarity(rec1, rec2)) {
+//		    			if (!rec1.getTextual().equals("null") && !rec2.getTextual().equals("null") && FlickrSimilarityUtil.TextualSimilarity(rec1, rec2)) {
 		 		        	ThirdCount++;
 		 		            long ridA = rec1.getId();
 		 		            long ridB = rec2.getId();
@@ -59,12 +59,12 @@ public class TemporalFirst {
 		 		                ridA = ridB;
 		 		                ridB = rid;
 		 		            }
-		 		            writer.write(ridA + "%" + ridB +"\n");
+//		 		            writer.write(ridA + "%" + ridB +"\n");
 		 		        }
 		    			
-		    		}
+//		    		}
 		            
-		    	}
+//		    	}
 		    	
 		    }
 		    

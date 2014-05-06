@@ -16,6 +16,7 @@ import org.macau.local.util.FlickrDataLocalUtil;
 public class FlickrFileOperation {
 	
 	public static String[] readFileByLines(String fileName) {
+		
         File file = new File(fileName);
         BufferedReader reader = null;
         String[] records = new String[FlickrDataLocalUtil.DataNumber];
@@ -141,20 +142,21 @@ public class FlickrFileOperation {
 		String[] records = readFileByLines(FlickrDataLocalUtil.rawRecordPath);
 		
 		System.out.println("Get the textual information of Paris");
-		
 		String[] textual = readTextualByLines(FlickrDataLocalUtil.rawTextualPath);
 		
 		System.out.println(records.length);
 		System.out.println(textual.length);
 		
-		String outputPath ="D:\\paris.even.10000.data";
+		String outputPath ="D:\\Data\\Flickr\\paris.even.data";
 		try
 		{
 
 			FileWriter writer = new FileWriter(outputPath);
 			
-			for(int i = startPoint; i < number;i+=2){
+			for(int i = startPoint; i < number;i+=1){
+				
 				writer.write(records[i] + FlickrDataLocalUtil.separator + textual[i] +"\n");;
+				
 			}
 			
 			//close the write
@@ -165,9 +167,10 @@ public class FlickrFileOperation {
 		{
 			System.out.println("Problemwriting" + outputPath);
 		}
+		
 	}
 	public static void main(String[] args){
-		createData(10000,0);
+		createData(796427,398214);
 		
 		
 //		System.out.println("Get The file of Paris");
