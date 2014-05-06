@@ -24,7 +24,7 @@ public class SpatialSampleWR {
 
 	public static void main(String[] args) throws IOException{
 		
-		ArrayList<FlickrData> rRecords = ReadFlickrData.readFileBySampling(FlickrDataLocalUtil.rDataPath);
+		ArrayList<FlickrData> rRecords = ReadFlickrData.readFileBySampling(FlickrDataLocalUtil.rDataPath,FlickrDataLocalUtil.samplingProbablity);
 		ArrayList<FlickrData> sRecords = ReadFlickrData.readFileByLines(FlickrDataLocalUtil.sDataPath);
 		
 		// get the s record Account

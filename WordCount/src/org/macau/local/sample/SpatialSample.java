@@ -342,6 +342,8 @@ public class SpatialSample {
 	public static void main(String[] args) throws IOException{
 		
 //		spatialGroupSample(10000);
+		Long startTime = System.currentTimeMillis();
 		spatialOlkenSample(ReadFlickrData.readFileBySampling(FlickrDataLocalUtil.rDataPath,1),1000,SpatialBlackBoxWR2.getSpatialWeightedData(FlickrDataLocalUtil.sDataPath),10000);
+		System.out.println("Phase One cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
 	}
 }

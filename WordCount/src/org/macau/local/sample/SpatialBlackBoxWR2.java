@@ -6,12 +6,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.macau.flickr.util.FlickrSimilarityUtil;
+import org.macau.flickr.util.FlickrValue;
 import org.macau.flickr.util.spatial.ZOrderValue;
 import org.macau.local.file.ReadFlickrData;
 import org.macau.local.util.FlickrData;
@@ -73,7 +76,7 @@ public class SpatialBlackBoxWR2 {
                 	
                 	for(int j = lonTile-1; j <= lonTile+1;j++){
                 		
-                		int zOrder = ZOrderValue.parseToZOrder(latTile, lonTile);
+                		int zOrder = ZOrderValue.parseToZOrder(i, j);
                 		
                 		 if(spatialWeight.get(zOrder) == null){
                          	
@@ -105,6 +108,73 @@ public class SpatialBlackBoxWR2 {
 		return spatialWeight;
 	}
 	
+	
+	public static Map<Integer,List<FlickrData>> getSpatialListData(String fileName){
+		
+		//read each record from the file
+		File file = new File(fileName);
+		 
+        BufferedReader reader = null;
+        
+        Map<Integer,List<FlickrData>> spatialWeight = new HashMap<Integer,List<FlickrData>>();
+        
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            int line = 1;
+            
+            //read all the data from S and calculate the result
+            while ((tempString = reader.readLine()) != null) {
+
+                String[] flickrData = tempString.split(":");
+                
+                double lat = Double.parseDouble(flickrData[2]);
+                double lon = Double.parseDouble(flickrData[3]);
+                
+                FlickrData fd = FlickrSimilarityUtil.getFlickrDataFromString(tempString);
+                
+                int latTile =(int)(lat/Math.sqrt(FlickrSimilarityUtil.DISTANCE_THRESHOLD));
+                int lonTile = (int)(lon/Math.sqrt(FlickrSimilarityUtil.DISTANCE_THRESHOLD));
+                
+                for(int i = latTile-1;i <= latTile+1;i++){
+                	
+                	for(int j = lonTile-1; j <= lonTile+1;j++){
+                		
+                		int zOrder = ZOrderValue.parseToZOrder(i, j);
+                		
+                		
+                		if(spatialWeight.containsKey(zOrder)){
+        					
+                			spatialWeight.get(zOrder).add(fd);
+
+        				}else{
+
+        					ArrayList<FlickrData> recordList = new ArrayList<FlickrData>();
+        					recordList.add(fd);
+        					spatialWeight.put(new Integer(zOrder),recordList);
+        					
+        				}
+
+                	}
+                }
+                line++;
+            }
+           
+            
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+		
+		return spatialWeight;
+	}
 	
 	/**
 	 * 
@@ -174,6 +244,77 @@ public class SpatialBlackBoxWR2 {
         return textualAccount;
 	}
 
+	
+	/**
+	 * 
+	 * @param fileName
+	 * @return statistic of the data
+	 * Using the Account as the weight
+	 */
+	public static Map<Integer,List<FlickrData>> getTextualListData(String fileName){
+		
+		File file = new File(fileName);
+		 
+        BufferedReader reader = null;
+        
+        Map<Integer,List<FlickrData>> textualWeight = new HashMap<Integer,List<FlickrData>>();
+        
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            int line = 1;
+            
+            // Read One line one time until the null
+            while ((tempString = reader.readLine()) != null) {
+        		
+        		String textual = tempString.toString().split(":")[5];
+        		
+        		System.out.println(line);
+        		if(!textual.equals("null")){
+        			
+        			String[] textualList = textual.split(";");
+        			
+        			FlickrData fd = FlickrSimilarityUtil.getFlickrDataFromString(tempString);
+        			//get the prefix values
+        			int prefixLength = SimilarityUtil.getPrefixLength(textualList.length, FlickrSimilarityUtil.TEXTUAL_THRESHOLD);
+        			
+        			for(int i = 0; i < prefixLength;i++){
+        				
+        				Integer tokenID = Integer.parseInt(textualList[i]);
+        				
+        				if(textualWeight.containsKey(tokenID)){
+        					
+        					textualWeight.get(tokenID).add(fd);
+
+        				}else{
+
+        					List<FlickrData> recordList = new ArrayList<FlickrData>();
+        					recordList.add(fd);
+        					textualWeight.put(new Integer(tokenID),recordList);
+        					
+        				}
+        				
+        			}
+        			
+        		}
+        		
+                line++;
+            }
+           
+            
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+        return textualWeight;
+	}
 	/**
 	 * get the weight data from the S set
 	 */
@@ -472,7 +613,8 @@ public class SpatialBlackBoxWR2 {
 	public static void main(String[] args){
 		
 //		weightedBlackBoxWR2ofTextual(FlickrDataLocalUtil.rDataPath,4000,getTextualWeightedData(FlickrDataLocalUtil.sDataPath));
-		weightedBlackBoxWR2ofSpatial(FlickrDataLocalUtil.rDataPath,4000,getSpatialWeightedData(FlickrDataLocalUtil.sDataPath));
+//		weightedBlackBoxWR2ofSpatial(FlickrDataLocalUtil.rDataPath,4000,getSpatialWeightedData(FlickrDataLocalUtil.sDataPath));
+		SpatialBlackBoxWR2.getSpatialListData(FlickrDataLocalUtil.sDataPath);
 		
 		//r dummy values
 //		int[] reservoirArray = new int[sampleSize]; 

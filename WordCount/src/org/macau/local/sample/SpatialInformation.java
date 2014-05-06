@@ -22,7 +22,7 @@ public class SpatialInformation {
 
 	public static void main(String[] args){
 		
-		ArrayList<FlickrData> rRecords = ReadFlickrData.readFileBySampling(FlickrDataLocalUtil.rDataPath);
+		ArrayList<FlickrData> rRecords = ReadFlickrData.readFileBySampling(FlickrDataLocalUtil.rDataPath,1);
 		
 		List<Double> latList = new ArrayList<Double>();
 		
@@ -30,7 +30,7 @@ public class SpatialInformation {
 		
 		for(FlickrData record: rRecords){
 			
-			Double key = record.getLat();
+			Double key = record.getLon();
 			if(accountMap.get(key) == null){
 				accountMap.put(key, new Integer(1));
 			}else{
