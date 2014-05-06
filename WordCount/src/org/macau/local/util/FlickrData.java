@@ -78,12 +78,32 @@ public class FlickrData {
 	
 	
 	public String toString(){
-		return id + ":" + locationID;
+		return id + ":" + locationID + ":" + lat + ":" + lon + ":" + timestamp + ":" + textual;
 	}
-
+	
+	@Override 
+	public int hashCode(){
+	    return FlickrData.class.toString().hashCode();
+	 }
+	@Override 
+	public boolean equals(Object object){
+	    if(object==null) return this==null;
+	    return object.toString().equals(toString());
+	  }
 	public FlickrData() {
     
     }
+	
+	public FlickrData(FlickrData fd){
+		
+		this.id = fd.id;
+		this.locationID = fd.locationID;
+		this.lat = fd.lat;
+		this.lon = fd.lon;
+		this.timestamp = fd.timestamp;
+		this.textual = fd.textual;
+		
+	}
 	
 	public FlickrData(long id, int locationID, double lat, double lon, long timestamp,String textual){
 		this.id = id;

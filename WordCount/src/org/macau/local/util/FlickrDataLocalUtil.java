@@ -9,13 +9,20 @@ public class FlickrDataLocalUtil {
 	
 	
 	public final static String dataPath ="D:\\paris.txt";
-	public final static String rDataPath ="D:\\paris.even.10000.data";
-	public final static String sDataPath ="D:\\paris.odd.10000.data";
+	
+	public final static String rRawDataPath ="D:\\Data\\Flickr\\paris.even.data";
+	public final static String sRawDataPath ="D:\\Data\\Flickr\\paris.odd.data";
+	
+	public final static String rDataPath ="D:\\Data\\10000\\paris.even.data";
+	public final static String sDataPath ="D:\\Data\\10000\\paris.odd.data";
 	
 	
-	public final static String resultPath ="D:\\paris.result.data";
+	
+	public final static String resultPath ="D:\\Data\\paris.result.data";
 	public final static String separator = ":";
 	public final static int DataNumber = 796427;
 	
 	public final static int CompareCount = 5000;
+	
+	public final static double samplingProbablity = 0.01;
 }
