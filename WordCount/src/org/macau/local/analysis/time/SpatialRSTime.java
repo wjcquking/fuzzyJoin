@@ -31,22 +31,22 @@ public class SpatialRSTime {
 		
 		FileWriter writer = new FileWriter(FlickrDataLocalUtil.resultPath);
 		
-		for (int i = 0; i < FlickrDataLocalUtil.CompareCount; i++) {
+		for (int i = 0; i < rRecords.size(); i++) {
 			
 			FlickrData value1 = rRecords.get(i);
 			
-		    for (int j = 0; j < FlickrDataLocalUtil.CompareCount; j++) {
+		    for (int j = 0; j < sRecords.size(); j++) {
 		    	
 		    	FlickrData value2 = sRecords.get(j);
 		    	
-		    	if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
-		    	
-		    		firstCount++;
-		    		if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
-		    		
-		    			SecondCount++;
-		    				
-		    			if (FlickrSimilarityUtil.TextualSimilarity(value1, value2)) {
+//		    	if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
+//		    	
+//		    		firstCount++;
+//		    		if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
+//		    		
+//		    			SecondCount++;
+//		    				
+		    			if (FlickrSimilarityUtil.SpatialSimilarity(value1, value2)) {
 		 		        	ThirdCount++;
 		 		            long ridA = value1.getId();
 		 		            long ridB = value2.getId();
@@ -55,12 +55,13 @@ public class SpatialRSTime {
 		 		                ridA = ridB;
 		 		                ridB = rid;
 		 		            }
-		 		            writer.write(ridA + "%" + ridB +"\n");
+		 		            System.out.println(i + "-- " + ThirdCount);
+//		 		            writer.write(ridA + "%" + ridB +"\n");
 		 		        }
 		    			
-		    		}
+//		    		}
 		            
-		    	}
+//		    	}
 		    	
 		    }
 		    
