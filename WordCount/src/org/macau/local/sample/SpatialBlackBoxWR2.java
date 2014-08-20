@@ -33,6 +33,123 @@ public class SpatialBlackBoxWR2 {
 
 	public static final int sampleSize  = 1000;
 	
+	public static Map<Integer,Integer> getTemporalWeightedData(String fileName){
+		//read each record from the file
+		File file = new File(fileName);
+		 
+        BufferedReader reader = null;
+        
+        Map<Integer,Integer> temporalWeight = new HashMap<Integer,Integer>();
+        
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            int line = 1;
+            //read all the data from S and calculate the result
+            while ((tempString = reader.readLine()) != null) {
+
+                String[] flickrData = tempString.split(":");
+                
+                long timestamp = Long.parseLong(flickrData[4]);
+        		
+        		
+        		int timeInterval = (int)(timestamp / FlickrSimilarityUtil.TEMPORAL_THRESHOLD);
+                
+                for(int i = timeInterval-1;i <= timeInterval+1;i++){
+                		
+                		 if(temporalWeight.get(i) == null){
+                         	
+                			 temporalWeight.put(i, 1);
+                         	
+                         }else{
+                         	
+                        	 temporalWeight.put(i, temporalWeight.get(i)+1);
+                         }
+                         	
+                }
+                line++;
+            }
+           
+            
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+		
+		return temporalWeight;
+	}
+	
+	
+	public static Map<Integer,List<FlickrData>> getTemporalListData(String fileName){
+		
+		//read each record from the file
+		File file = new File(fileName);
+		 
+        BufferedReader reader = null;
+        
+        Map<Integer,List<FlickrData>> temporalWeight = new HashMap<Integer,List<FlickrData>>();
+        
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            int line = 1;
+            
+            //read all the data from S and calculate the result
+            while ((tempString = reader.readLine()) != null) {
+
+                String[] flickrData = tempString.split(":");
+                
+                long timestamp = Long.parseLong(flickrData[4]);
+        		
+        		
+        		int timeInterval = (int)(timestamp / FlickrSimilarityUtil.TEMPORAL_THRESHOLD);
+                
+                
+                
+                FlickrData fd = FlickrSimilarityUtil.getFlickrDataFromString(tempString);
+                
+                
+                for(int i = timeInterval-1;i <= timeInterval+1;i++){
+                	
+                		if(temporalWeight.containsKey(i)){
+        					
+                			temporalWeight.get(i).add(fd);
+
+        				}else{
+
+        					ArrayList<FlickrData> recordList = new ArrayList<FlickrData>();
+        					recordList.add(fd);
+        					temporalWeight.put(new Integer(i),recordList);
+        					
+        				}
+
+                }
+                line++;
+            }
+           
+            
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+		
+		return temporalWeight;
+	}
+
 	/**
 	 * Get the spatial statistic information from the set S
 	 * 
