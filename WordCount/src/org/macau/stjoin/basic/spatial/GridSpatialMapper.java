@@ -4,6 +4,7 @@ package org.macau.stjoin.basic.spatial;
  * @author: wangjian
  * @date: 2013-11-12
  * 
+ * 
  * the idea comes from the paper "SJMR:Parallelizing Spatial Join with MapReduce",IEEE, 2009
  * 
  * The MapFunction is for R join S
