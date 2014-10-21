@@ -12,6 +12,7 @@ package org.macau.stjoin.basic.spatial;
  * compare one grid in the S, but there may be too many replications in S if the distance threshold is large.
  * 
  * 
+ * 
  * add some change to see how to work with subversion in the eclipse
  */
 
@@ -38,6 +39,7 @@ import org.macau.spatial.Distance;
  * For Example
  * The Data form:ID;locationID, lat;lon; timestamp, textual 
  * The Data Example:1093113743:215929:48.89899:2.380696:973929974000:0;82;525;2479;19649;25431;31250;51203
+ * 
  */
 
 
