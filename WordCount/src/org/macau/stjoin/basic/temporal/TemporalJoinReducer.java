@@ -36,6 +36,10 @@ public class TemporalJoinReducer extends
 		private long sCompareCount = 0;
 		private long oCompareCount = 0;
 
+		protected void setup(Context context) throws IOException, InterruptedException {
+
+			System.out.println("Temporal reducer Start at " + System.currentTimeMillis());
+		}
 		
 		public void reduce(LongWritable key, Iterable<FlickrValue> values,
 				Context context) throws IOException, InterruptedException{
@@ -119,6 +123,7 @@ public class TemporalJoinReducer extends
 						
 						FlickrValue value1 = rMap.get(i).get(j);
 						
+						//for the same tail, there is no need for comparing
 						tCompareCount++;
 						for(int k = 0; k < sMap.get(i).size();k++){
 							FlickrValue value2 = sMap.get(i).get(k);
@@ -199,12 +204,13 @@ public class TemporalJoinReducer extends
 		 */
 		protected void cleanup(Context context) throws IOException, InterruptedException {
 			System.out.println("clean up");
-			
+			System.out.println("The Reducer End at"+System.currentTimeMillis());
 			long rMax = 0;
 			long rMin = 1000000;
 			long rC =0;
+			System.out.println("R data set");
 			for(long i : rCount){
-				System.out.print(i + ";");
+//				System.out.println(i);
 				if(i > rMax){
 					rMax = i;
 				}
@@ -213,7 +219,6 @@ public class TemporalJoinReducer extends
 				}
 				rC += i;
 			}
-			System.out.println();
 			
 			System.out.println("r Max " + rMax);
 			System.out.println("r Min " + rMin);
@@ -223,8 +228,10 @@ public class TemporalJoinReducer extends
 			long sMax = 0;
 			long sMin = 1000000;
 			long sC =0;
+			System.out.println("S data set");
+			
 			for(long i : sCount){
-				System.out.println(i + ";");
+//				System.out.println(i);
 				if(i > sMax){
 					sMax = i;
 				}
@@ -261,7 +268,8 @@ public class TemporalJoinReducer extends
 			System.out.println("T compare Count " + tCompareCount);
 			System.out.println("S compare Count " + sCompareCount);
 			System.out.println("Textual Compare Count " + oCompareCount);
-			System.out.println("The total Count " + (tCompareCount+ sCompareCount + oCompareCount));
+			wCompareCount = tCompareCount+ sCompareCount + oCompareCount;
+			System.out.println("The total Count " + wCompareCount);
 			
 			
 		}

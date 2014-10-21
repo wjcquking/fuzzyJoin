@@ -4,6 +4,7 @@ package org.macau.stjoin.basic.spatial;
  * @author: wangjian
  * @date: 2013-11-12
  * 
+ * 
  * the idea comes from the paper "SJMR:Parallelizing Spatial Join with MapReduce",IEEE, 2009
  * 
  * The MapFunction is for R join S
@@ -11,7 +12,11 @@ package org.macau.stjoin.basic.spatial;
  * Partition R in one way grid and Partition S in the extension grid, which means that one grid in R just need to 
  * compare one grid in the S, but there may be too many replications in S if the distance threshold is large.
  * 
+ * 
+ * 
+ * add some change to see how to work with subversion in the eclipse
  */
+
 
 
 import java.io.IOException;
@@ -35,6 +40,9 @@ import org.macau.spatial.Distance;
  * For Example
  * The Data form:ID;locationID, lat;lon; timestamp, textual 
  * The Data Example:1093113743:215929:48.89899:2.380696:973929974000:0;82;525;2479;19649;25431;31250;51203
+ * 
+ * 
+ * 
  */
 
 
@@ -64,6 +72,31 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		list.add(ZOrderValue.parseToZOrder(latNumber, lonNumber));
 		return list;
 		
+	}
+	
+	public static ArrayList<Integer> tileOfS(double lat, double lon){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		double thres = Math.pow(FlickrSimilarityUtil.DISTANCE_THRESHOLD, 0.5);
+		
+		int latNumberStart = (int) ((lat - thres - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		if(latNumberStart < 0){
+			latNumberStart = 0;
+		}
+		int latNumberEnd = (int) ((lat + thres - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		int lonNumberStart =(int)((lon-thres- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		if(lonNumberStart < 0){
+			lonNumberStart = 0;
+		}
+		int lonNumberEnd = (int)((lon + thres - FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		
+		for(int i = latNumberStart;i <= latNumberEnd;i++){
+			for(int j = lonNumberStart;j <= lonNumberEnd;j++){
+//				System.out.println(i + ":" + j);
+				list.add(ZOrderValue.parseToZOrder(i, j));
+			}
+		}
+		
+		return list;
 	}
 	
 	
@@ -182,17 +215,17 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 			
 			tileList = tileNumberOfR(lat,lon);
 		}else{
-			
-			tileList = tileNumberOfS(lat,lon);
+//			tileList = tileNumberOfS(lat,lon);
+			tileList = tileOfS(lat,lon);
 		}
 		
-		System.out.println(tileList.toString());
+//		System.out.println(tileList.toString());
 		
 //		outputValue.setTiles(tileList.toString().substring(1, tileList.toString().length()-1));
 		
 		outputValue.setTiles(value.toString().split(":")[5]);
 		
-		System.out.println(outputValue.getTiles());
+//		System.out.println(outputValue.getTiles());
 		/*
 		 * for R, there is only need one tile
 		 * but for S, the data should send to other tiles
@@ -201,6 +234,7 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		
 			outputValue.setTileNumber(tile);
 			outputKey.set(GridPartition.paritionNumber(tile));
+//			outputKey.set(tile);
 			context.write(outputKey, outputValue);
 			
 		}

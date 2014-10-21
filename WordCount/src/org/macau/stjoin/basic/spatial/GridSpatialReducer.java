@@ -41,7 +41,7 @@ public class GridSpatialReducer extends
 	public void reduce(IntWritable key, Iterable<FlickrValue> values,
 			Context context) throws IOException, InterruptedException{
 		
-		System.out.println(key);
+//		System.out.println(key);
 		
 		for(FlickrValue value:values){
 			
@@ -180,8 +180,12 @@ public class GridSpatialReducer extends
 		long rMax = 0;
 		long rMin = 1000000;
 		long rC =0;
+		System.out.println("R data set");
+		
 		for(long i : rCount){
-			System.out.print(i + ";");
+			
+			System.out.println(i);
+			
 			if(i > rMax){
 				rMax = i;
 			}
@@ -190,7 +194,6 @@ public class GridSpatialReducer extends
 			}
 			rC += i;
 		}
-		System.out.println();
 		
 		System.out.println("r Max " + rMax);
 		System.out.println("r Min " + rMin);
@@ -201,7 +204,7 @@ public class GridSpatialReducer extends
 		long sMin = 1000000;
 		long sC =0;
 		for(long i : sCount){
-			System.out.println(i + ";");
+//			System.out.println(i + ";");
 			if(i > sMax){
 				sMax = i;
 			}
@@ -238,7 +241,8 @@ public class GridSpatialReducer extends
 		System.out.println("T compare Count " + tCompareCount);
 		System.out.println("S compare Count " + sCompareCount);
 		System.out.println("Textual Compare Count " + oCompareCount);
-		System.out.println("The total Count " + (tCompareCount+ sCompareCount + oCompareCount));
+		wCompareCount = tCompareCount+ sCompareCount + oCompareCount;
+		System.out.println("The total Count " + wCompareCount);
 		
 		
 	}

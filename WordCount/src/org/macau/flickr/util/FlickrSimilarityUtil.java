@@ -11,11 +11,19 @@ public class FlickrSimilarityUtil {
 
 	//time threshold
 	// the "L" is very important
+//<<<<<<< HEAD
+//	public static final long TEMPORAL_THRESHOLD = 700L*86400000L;
+//=======
 	public static final long TEMPORAL_THRESHOLD = 500L*86400000L;
-	
+//>>>>>>> branch 'master' of https://github.com/wjcquking/fuzzyJoin.git
+//	
 	//spatial threshold, Unit : km
+//<<<<<<< HEAD
+//	public static final double DISTANCE_THRESHOLD = 0.0001;
+//=======
 	public static final double DISTANCE_THRESHOLD = 0.004;
 	 
+//>>>>>>> branch 'master' of https://github.com/wjcquking/fuzzyJoin.git
 	//textual threshold
 	public static final double TEXTUAL_THRESHOLD = 0.8;
 	

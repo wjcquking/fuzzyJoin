@@ -8,6 +8,7 @@ package org.macau.flickr.spatial.analysis;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.mapreduce.Job;
@@ -28,7 +29,7 @@ public class SpatialAccount {
 		accountJob.setCombinerClass(SpatialAccountReducer.class);
 		accountJob.setReducerClass(SpatialAccountReducer.class);
 		
-		accountJob.setOutputKeyClass(IntWritable.class);
+		accountJob.setOutputKeyClass(DoubleWritable.class);
 		accountJob.setOutputValueClass(IntWritable.class);
 		
 		FileInputFormat.addInputPath(accountJob, new Path(FlickrSimilarityUtil.flickrInputPath));

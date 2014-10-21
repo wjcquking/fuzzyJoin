@@ -16,7 +16,8 @@ public static boolean TextualSimilarityBasicJoin(Configuration conf) throws Exce
 		Job basicJob = new Job(conf,"Textual Basic Similarity Join");
 		basicJob.setJarByClass(TextualJoinJob.class);
 		
-		basicJob.setMapperClass(TextualJoinMapper.class);
+//		basicJob.setMapperClass(TextualJoinMapper.class);
+		basicJob.setMapperClass(TextualJoinImprovedMapper.class);
 //		basicJob.setCombinerClass(TemporalJoinReducer.class);
 		
 		basicJob.setReducerClass(TextualJoinReducer.class);

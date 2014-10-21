@@ -9,9 +9,9 @@ import org.apache.hadoop.mapreduce.Mapper;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 
 public class SpatialAccountMapper extends
-	Mapper<Object,Text,IntWritable,IntWritable>{
+	Mapper<Object,Text,DoubleWritable,IntWritable>{
 	
-	private final IntWritable outputKey = new IntWritable();
+	private final DoubleWritable outputKey = new DoubleWritable();
 	
 	private final static IntWritable one = new IntWritable(1);
 
@@ -34,16 +34,18 @@ public class SpatialAccountMapper extends
 		 * longitude : 2.223266 - 2.473817
 		 * 
 		 */
-		double lat = Double.parseDouble(value.toString().split(";")[1]);
+		double lat = Double.parseDouble(value.toString().split(":")[2]);
 		
-		double lon = Double.parseDouble(value.toString().split(";")[2]);
+		double lon = Double.parseDouble(value.toString().split(":")[3]);
 		
+		double timestamp = Double.parseDouble(value.toString().split(":")[4]);
 		
-		outputKey.set(tileNumber(lat,lon));
+		int day = (int)(timestamp/(3600*1000*24));
+		outputKey.set(lat);
 		
-		if(tileNumber(lat,lon) == 149){
-			System.out.println(value);
-		}
+//		if(tileNumber(lat,lon) == 149){
+//			System.out.println(value);
+//		}
 		
 		context.write(outputKey,one);
 	}

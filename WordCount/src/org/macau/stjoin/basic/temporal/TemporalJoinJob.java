@@ -39,7 +39,7 @@ public class TemporalJoinJob {
 		
 //		basicJob.setOutputKeyClass(Text.class);
 //		basicJob.setOutputValueClass(Text.class);
-//		basicJob.setNumReduceTasks(6);
+		basicJob.setNumReduceTasks(6);
 		
 		FileInputFormat.addInputPath(basicJob, new Path(FlickrSimilarityUtil.flickrInputPath));
 		FileOutputFormat.setOutputPath(basicJob, new Path(FlickrSimilarityUtil.flickrOutputPath));

@@ -14,6 +14,7 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
@@ -25,6 +26,11 @@ public class TemporalJoinMapper extends
 	
 	private final FlickrValue outputValue = new FlickrValue();
 	
+	protected void setup(Context context) throws IOException, InterruptedException {
+
+		System.out.println("Temporal mapper Start at " + System.currentTimeMillis());
+	}
+	
 	public static String convertDateToString(Date date){
 		SimpleDateFormat df=new SimpleDateFormat("yyyy-MM-dd");
 		return df.format(date);
@@ -32,18 +38,6 @@ public class TemporalJoinMapper extends
 	
 	public static Date convertLongToDate(Long date){
 		return new Date(date);
-	}
-	
-	public static int getTagByFileName(String fileName){
-		
-		if(fileName.contains(FlickrSimilarityUtil.R_TAG)){
-			
-			return FlickrSimilarityUtil.R_tag;
-			
-		}else{
-			return FlickrSimilarityUtil.S_tag;
-		}
-		
 	}
 	
 	
@@ -56,7 +50,7 @@ public class TemporalJoinMapper extends
 		String fileName = ((FileSplit)inputSplit).getPath().getName();
 				
 		
-		int tag = getTagByFileName(fileName);
+		int tag = FlickrSimilarityUtil.getTagByFileName(fileName);
 		
 		long id =Long.parseLong(value.toString().split(":")[0]);
 		double lat = Double.parseDouble(value.toString().split(":")[2]);
@@ -66,6 +60,7 @@ public class TemporalJoinMapper extends
 		
 		long timeInterval = timestamp / FlickrSimilarityUtil.TEMPORAL_THRESHOLD;
 		
+//		outputValue = new FlickrValue(FlickrSimilarityUtil.getFlickrVallueFromString(value.toString()));
 		
 		outputValue.setTileNumber((int)timeInterval);
 		
@@ -73,9 +68,10 @@ public class TemporalJoinMapper extends
 		outputValue.setLat(lat);
 		outputValue.setLon(lon);
 		outputValue.setTag(tag);
-		outputValue.setTiles(value.toString().split(":")[5]);
 		
 		//the textual information
+		outputValue.setTiles(value.toString().split(":")[5]);
+		
 //		System.out.println(value.toString().split(":")[5]);
 		
 		outputValue.setTimestamp(timestamp);
@@ -92,5 +88,8 @@ public class TemporalJoinMapper extends
 		context.write(outputKey, outputValue);
 		
 		
+	}
+	protected void cleanup(Context context) throws IOException, InterruptedException {
+		System.out.println("The Temporal mapper end at " + System.currentTimeMillis());
 	}
 }
