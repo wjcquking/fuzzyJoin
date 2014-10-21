@@ -11,12 +11,21 @@ public class FlickrSimilarityUtil {
 
 	//time threshold
 	// the "L" is very important
-	public static final long TEMPORAL_THRESHOLD = 700L*86400000L;
-	
+//<<<<<<< HEAD
+//	public static final long TEMPORAL_THRESHOLD = 700L*86400000L;
+//=======
+	public static final long TEMPORAL_THRESHOLD = 500L*86400000L;
+//>>>>>>> branch 'master' of https://github.com/wjcquking/fuzzyJoin.git
+//	
 	//spatial threshold, Unit : km
-	public static final double DISTANCE_THRESHOLD = 0.0001;
+//<<<<<<< HEAD
+//	public static final double DISTANCE_THRESHOLD = 0.0001;
+//=======
+	public static final double DISTANCE_THRESHOLD = 0.004;
+	 
+//>>>>>>> branch 'master' of https://github.com/wjcquking/fuzzyJoin.git
 	//textual threshold
-	public static final double TEXTUAL_THRESHOLD = 0.6;
+	public static final double TEXTUAL_THRESHOLD = 0.8;
 	
 	
 	public static final double SAMPLE_PROBABILITY = 0.004;
@@ -26,7 +35,7 @@ public class FlickrSimilarityUtil {
 	public static final int REDUCER_NUMBER = 100;
 	
 	//the tile number of each line
-	public static final int TILE_NUMBER_EACH_LINE = 10;
+	public static final int TILE_NUMBER_EACH_LINE = 10; 
 	
 	public static final int TOTAL_TILE_NUMBER = TILE_NUMBER_EACH_LINE * TILE_NUMBER_EACH_LINE;
 	
@@ -66,6 +75,8 @@ public class FlickrSimilarityUtil {
 		return Math.abs(value1.getTimestamp()- value2.getTimestamp()) < TEMPORAL_THRESHOLD;
 		
 	}
+	
+	
 	public static int getTagByFileName(String fileName){
 		
 		if(fileName.contains(R_TAG)){
@@ -107,6 +118,21 @@ public class FlickrSimilarityUtil {
 	
 	/**
 	 * 
+	 * @param i lat:lon
+	 * @param j lat:lon
+	 * @return the distance of two point
+	 */
+	
+	public static double getDistance(String i, String j){
+		double iLat = Double.parseDouble(i.split(":")[0]); 
+		double iLon = Double.parseDouble(i.split(":")[0]);
+		double jLat = Double.parseDouble(i.split(":")[0]);
+		double jLon = Double.parseDouble(j.split(":")[0]);
+		return Distance.GreatCircleDistance(iLat,iLon,jLat,jLon);
+	}
+	
+	/**
+	 * 
 	 * @param value1
 	 * @param value2
 	 * @return if the distance of two objects is larger than the distance threshold, return true, else return false
@@ -121,6 +147,10 @@ public class FlickrSimilarityUtil {
 	
 	public static boolean TextualSimilarity(FlickrValue value1, FlickrValue value2){
 		return getTokenSimilarity(value1.getTiles(), value2.getTiles()) > TEXTUAL_THRESHOLD;
+	}
+	
+	public static boolean TextualSimilarity(FlickrData value1, FlickrData value2){
+		return getTokenSimilarity(value1.getTextual(), value2.getTextual()) > TEXTUAL_THRESHOLD;
 	}
 	
 	
@@ -152,6 +182,29 @@ public class FlickrSimilarityUtil {
 		outputValue.setLat(lat);
 		outputValue.setLon(lon);
 		outputValue.setTiles(value.toString().split(":")[5]);
+		outputValue.setTimestamp(timestamp);
+		
+		return outputValue;
+	}
+	
+	/**
+	 * 
+	 * @param value which read in the raw file
+	 * @return the FlickrValue which gets from the String value
+	 */
+	public static FlickrData getFlickrDataFromString(String value){
+		
+		FlickrData outputValue = new FlickrData();
+		
+		long id =Long.parseLong(value.toString().split(":")[0]);
+		double lat = Double.parseDouble(value.toString().split(":")[2]);
+		double lon = Double.parseDouble(value.toString().split(":")[3]);
+		long timestamp = Long.parseLong(value.toString().split(":")[4]);
+		
+		outputValue.setId(id);
+		outputValue.setLat(lat);
+		outputValue.setLon(lon);
+		outputValue.setTextual(value.toString().split(":")[5]);
 		outputValue.setTimestamp(timestamp);
 		
 		return outputValue;

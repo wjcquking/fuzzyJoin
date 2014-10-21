@@ -39,6 +39,7 @@ public class TextualFirst {
 		
 		return (double)numOfIntersection/(double)(i_num+j_num-numOfIntersection);
 	}
+	
 	public static void main(String[] args){
 		
 		String similarityName = "jaccard";
