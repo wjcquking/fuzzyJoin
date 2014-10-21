@@ -11,11 +11,10 @@ public class FlickrSimilarityUtil {
 
 	//time threshold
 	// the "L" is very important
-	public static final long TEMPORAL_THRESHOLD = 1L*86400000L;
+	public static final long TEMPORAL_THRESHOLD = 700L*86400000L;
 	
 	//spatial threshold, Unit : km
-	public static final double DISTANCE_THRESHOLD = 0.00014;
-	 
+	public static final double DISTANCE_THRESHOLD = 0.0001;
 	//textual threshold
 	public static final double TEXTUAL_THRESHOLD = 0.6;
 	

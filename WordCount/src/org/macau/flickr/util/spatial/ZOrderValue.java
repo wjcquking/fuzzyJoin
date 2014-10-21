@@ -33,4 +33,8 @@ public class ZOrderValue {
 		}
 		return Integer.parseInt(z,2);
 	}
+	
+	public static void main(String args){
+		System.out.println("fuck the z order");
+	}
 }

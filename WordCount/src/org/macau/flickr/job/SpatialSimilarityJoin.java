@@ -20,7 +20,7 @@ public static boolean SpatialSimilarityBasicJoin(Configuration conf) throws Exce
 		
 		spaitialJob.setMapperClass(BasicSpatialMapper.class);
 		//there can add one combiner which can combine the result
-		//spaitialJob.setCombinerClass(TemporalBasicReducer.class);
+		//spaitialJob.setCombinerClass(TemporalBasiecReducer.class);
 		
 		spaitialJob.setReducerClass(BasicSpatialReducer.class);
 		
