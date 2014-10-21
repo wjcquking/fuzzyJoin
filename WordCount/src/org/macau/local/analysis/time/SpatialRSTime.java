@@ -15,6 +15,9 @@ import org.macau.local.util.FlickrDataLocalUtil;
 
 /*
  * 		
+ * 
+ * 
+ * 
  */
 public class SpatialRSTime {
 	

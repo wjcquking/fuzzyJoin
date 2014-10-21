@@ -5,6 +5,7 @@ import java.util.Stack;
 /**
  * JAVA获得一个数组的指定长度的排列组合。<br>
  * 
+ * 
  * @author JAVA世纪网(java2000.net, laozizhu.com)
  */
 public class OneFeatureJoin {
@@ -15,6 +16,7 @@ public class OneFeatureJoin {
     // 循环获得每个长度的排列组合
     for (int num = 1; num <= arr.length; num++) {
       t.getSequence(arr, 0, num);
+      
     }
   }
 
