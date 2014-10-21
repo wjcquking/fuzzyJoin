@@ -3,6 +3,7 @@ package org.macau.stjoin.basic.spatial;
 /**
  * @author: wangjian
  * @date: 2013-11-12
+ * Last modify date: 2014-10-21
  * 
  * 
  * the idea comes from the paper "SJMR:Parallelizing Spatial Join with MapReduce",IEEE, 2009
@@ -40,7 +41,6 @@ import org.macau.spatial.Distance;
  * For Example
  * The Data form:ID;locationID, lat;lon; timestamp, textual 
  * The Data Example:1093113743:215929:48.89899:2.380696:973929974000:0;82;525;2479;19649;25431;31250;51203
- * 
  * 
  * 
  */
