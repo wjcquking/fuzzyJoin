@@ -96,13 +96,14 @@ public class SpatialSample {
 	/**
 	 * 
 	 * @param rRecords
-	 * @param r
-	 * @param accountMap
+	 * @param r : the sample size
+	 * @param accountMap : the Account information
+	 * @param sSize :  the size of s Set
 	 * 
 	 * get the selectivity of the spatial join
 	 * 
 	 */
-	public static void spatialOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap,int sSize){
+	public static double spatialOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap,int sSize){
 		
 		int max = OlkenSampleAlgorithm.getMaxValue(accountMap);
 		
@@ -162,12 +163,12 @@ public class SpatialSample {
 					}
 					
 					
-					if(FlickrSimilarityUtil.SpatialSimilarity(rFlickrData, sFlickrData)){
+//					if(FlickrSimilarityUtil.SpatialSimilarity(rFlickrData, sFlickrData)){
 						
 						accept = true;
-						System.out.println(p + "  "+ iterationCount[i]+"    "+weight+"  "+weightedListMap.get(zOrder).size()+ "   "+ rFlickrData + "%" + sFlickrData);
+//						System.out.println(p + "  "+ iterationCount[i]+"    "+weight+"  "+weightedListMap.get(zOrder).size()+ "   "+ rFlickrData + "%" + sFlickrData);
 						
-					}
+//					}
 				}
 			}
 		}
@@ -191,6 +192,8 @@ public class SpatialSample {
 		double selectivity = (double)max/(expectedValue * sSize);
 		
 		System.out.println("the selectivity is "+selectivity);
+		
+		return selectivity;
 		
 	}
 	

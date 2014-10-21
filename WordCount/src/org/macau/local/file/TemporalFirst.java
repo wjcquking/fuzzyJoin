@@ -34,18 +34,23 @@ public class TemporalFirst {
 		Long startTime = System.currentTimeMillis();
 		
 		FileWriter writer = new FileWriter(FlickrDataLocalUtil.resultPath);
+		
+
+		
 		for (int i = 0; i < rRecords.size(); i++) {
-			System.out.println(i);
+//			System.out.println(i);
 			FlickrData rec1 = rRecords.get(i);
+//			System.out.println(i + " " + rec1.getLat());
+			writer.write(rec1.getLon() + "\n");
 			
 		    for (int j = 0; j < sRecords.size(); j++) {
 		    	
 		    	FlickrData rec2 = sRecords.get(j);
 		    	
-//		    		if(FlickrSimilarityUtil.TemporalSimilarity(rec1, rec2)){
+		    		if(FlickrSimilarityUtil.TemporalSimilarity(rec1, rec2)){
 		    	
-//		    		firstCount++;
-		    		if(FlickrSimilarityUtil.SpatialSimilarity(rec1, rec2)){
+		    		firstCount++;
+//		    		if(FlickrSimilarityUtil.SpatialSimilarity(rec1, rec2)){
 		    		
 		    		
 		    			SecondCount++;
@@ -73,6 +78,7 @@ public class TemporalFirst {
 		System.out.println(firstCount);
 		System.out.println(SecondCount);
 		System.out.println(ThirdCount);
+		System.out.println((double)firstCount/rRecords.size()/sRecords.size());
 		System.out.println("Phase One cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
 	}
 }

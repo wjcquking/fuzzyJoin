@@ -11,7 +11,13 @@ import org.macau.local.util.FlickrData;
 import org.macau.local.util.FlickrDataLocalUtil;
 
 public class ReadFlickrData {
-
+	
+	/**
+	 * 
+	 * @param fileName
+	 * @return
+	 * Read the file and Return the FlickrData ArrayList
+	 */
 	public static ArrayList<FlickrData> readFileByLines(String fileName) {
 		
         File file = new File(fileName);
@@ -66,6 +72,14 @@ public class ReadFlickrData {
     }
 	
 	
+	/**
+	 * 
+	 * @param fileName
+	 * @param probablity
+	 * @return
+	 * 
+	 * Read the file by Sampling
+	 */
 	public static ArrayList<FlickrData> readFileBySampling(String fileName, double probablity) {
 		
         File file = new File(fileName);

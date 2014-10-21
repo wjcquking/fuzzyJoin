@@ -33,6 +33,70 @@ public class SpatialBlackBoxWR2 {
 
 	public static final int sampleSize  = 1000;
 	
+	/**
+	 * 
+	 * @param fileName
+	 * @return get the histogram of R data set
+	 */
+	public static Map<Integer,Integer> getRTemporalWeightedData(String fileName){
+		//read each record from the file
+		File file = new File(fileName);
+		 
+        BufferedReader reader = null;
+        
+        Map<Integer,Integer> temporalWeight = new HashMap<Integer,Integer>();
+        
+        try {
+            reader = new BufferedReader(new FileReader(file));
+            String tempString = null;
+            int line = 1;
+            //read all the data from S and calculate the result
+            while ((tempString = reader.readLine()) != null) {
+
+                String[] flickrData = tempString.split(":");
+                
+                long timestamp = Long.parseLong(flickrData[4]);
+        		
+        		
+        		int timeInterval = (int)(timestamp / FlickrSimilarityUtil.TEMPORAL_THRESHOLD);
+              int i = timeInterval;
+//                for(int i = timeInterval-1;i <= timeInterval+1;i++){
+                		
+                		 if(temporalWeight.get(i) == null){
+                         	
+                			 temporalWeight.put(i, 1);
+                         	
+                         }else{
+                         	
+                        	 temporalWeight.put(i, temporalWeight.get(i)+1);
+                         }
+                         	
+//                }
+                line++;
+            }
+           
+            
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e1) {
+                }
+            }
+        }
+		
+		return temporalWeight;
+	}
+	
+	/**
+	 * 
+	 * @param fileName
+	 * @return get the candidate histogram of S data set
+	 * which means for each part, it need save the candidate part
+	 */
 	public static Map<Integer,Integer> getTemporalWeightedData(String fileName){
 		//read each record from the file
 		File file = new File(fileName);
@@ -54,7 +118,7 @@ public class SpatialBlackBoxWR2 {
         		
         		
         		int timeInterval = (int)(timestamp / FlickrSimilarityUtil.TEMPORAL_THRESHOLD);
-                
+//              int i = timeInterval;
                 for(int i = timeInterval-1;i <= timeInterval+1;i++){
                 		
                 		 if(temporalWeight.get(i) == null){

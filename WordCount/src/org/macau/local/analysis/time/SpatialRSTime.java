@@ -29,33 +29,34 @@ public class SpatialRSTime {
 		int ThirdCount = 0;
 		Long startTime = System.currentTimeMillis();
 		
-		FileWriter writer = new FileWriter(FlickrDataLocalUtil.resultPath);
+//		FileWriter writer = new FileWriter(FlickrDataLocalUtil.resultPath);
 		
 		for (int i = 0; i < rRecords.size(); i++) {
 			
 			FlickrData value1 = rRecords.get(i);
+//			System.out.println(i);
 			
 		    for (int j = 0; j < sRecords.size(); j++) {
 		    	
 		    	FlickrData value2 = sRecords.get(j);
 		    	
-//		    	if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
+		    	if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
 //		    	
-//		    		firstCount++;
-//		    		if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
+		    		firstCount++;
+//		    		if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
 //		    		
 //		    			SecondCount++;
 //		    				
-		    			if (FlickrSimilarityUtil.SpatialSimilarity(value1, value2)) {
-		 		        	ThirdCount++;
-		 		            long ridA = value1.getId();
-		 		            long ridB = value2.getId();
-		 		            if (ridA < ridB) {
-		 		                long rid = ridA;
-		 		                ridA = ridB;
-		 		                ridB = rid;
-		 		            }
-		 		            System.out.println(i + "-- " + ThirdCount);
+//		    			if (FlickrSimilarityUtil.SpatialSimilarity(value1, value2)) {
+//		 		        	ThirdCount++;
+//		 		            long ridA = value1.getId();
+//		 		            long ridB = value2.getId();
+//		 		            if (ridA < ridB) {
+//		 		                long rid = ridA;
+//		 		                ridA = ridB;
+//		 		                ridB = rid;
+//		 		            }
+//		 		            System.out.println(i + "-- " + ThirdCount);
 //		 		            writer.write(ridA + "%" + ridB +"\n");
 		 		        }
 		    			
@@ -66,10 +67,11 @@ public class SpatialRSTime {
 		    }
 		    
 		}
-		writer.close();
+//		writer.close();
 		System.out.println(firstCount);
 		System.out.println(SecondCount);
 		System.out.println(ThirdCount);
+	
 		System.out.println("Phase One cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
 	}
 }

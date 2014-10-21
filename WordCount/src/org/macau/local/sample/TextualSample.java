@@ -153,7 +153,7 @@ public class TextualSample {
 	 * 
 	 * get the selectivity of the textual join
 	 */
-	public static void textualOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap,int sSize){
+	public static double textualOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap,int sSize){
 		
 		int max = OlkenSampleAlgorithm.getSumValue(accountMap);
 		
@@ -258,7 +258,7 @@ public class TextualSample {
 					if(!sFlickrData.getTextual().equals("null")&& FlickrSimilarityUtil.TextualSimilarity(rFlickrData, sFlickrData)){
 							
 						accept = true;
-						System.out.println(p + "  "+ iterationCount[i]+"    "+weightSum+"  "+ "   "+ rFlickrData + "%" + sFlickrData);
+//						System.out.println(p + "  "+ iterationCount[i]+"    "+weightSum+"  "+ "   "+ rFlickrData + "%" + sFlickrData);
 						
 					}
 				}
@@ -283,6 +283,7 @@ public class TextualSample {
 		
 		System.out.println("the selectivity is "+selectivity);
 		
+		return selectivity;
 	}
 	
 	public static void FrequencyParitionSampleofTextual(int r, int t){

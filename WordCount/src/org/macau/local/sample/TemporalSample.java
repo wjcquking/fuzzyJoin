@@ -99,16 +99,18 @@ public class TemporalSample{
 	 * get the selectivity of the spatial join
 	 * 
 	 */
-	public static void temporalOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap,int sSize){
+	public static double temporalOlkenSample(ArrayList<FlickrData> rRecords, int r,Map<Integer,Integer> accountMap,int sSize){
 		
 		int max = OlkenSampleAlgorithm.getMaxValue(accountMap);
+		
+		
 		
 		int candidateWeightSum = 0;
 		
 		
 		for(FlickrData rFlickrData : rRecords){
 			
-			int zOrder = getZOrder(rFlickrData);
+			int zOrder = (int)(rFlickrData.getTimestamp() / FlickrSimilarityUtil.TEMPORAL_THRESHOLD);
 			
 			int weight= 0;
 			
@@ -125,6 +127,8 @@ public class TemporalSample{
 		
 		Map<Integer,List<FlickrData>> weightedListMap = SpatialBlackBoxWR2.getTemporalListData(FlickrDataLocalUtil.sDataPath);
 		
+		List<FlickrData> rSampleList = new ArrayList<FlickrData>();
+		List<FlickrData> sSampleList = new ArrayList<FlickrData>();
 		
 		for(int i = 0;i < r;i++){
 			
@@ -159,12 +163,15 @@ public class TemporalSample{
 					}
 					
 					
-					if(FlickrSimilarityUtil.TemporalSimilarity(rFlickrData, sFlickrData)){
+//					if(FlickrSimilarityUtil.TemporalSimilarity(rFlickrData, sFlickrData)){
+						
+						rSampleList.add(rFlickrData);
+						sSampleList.add(sFlickrData);
 						
 						accept = true;
-						System.out.println(p + "  "+ iterationCount[i]+"    "+weight+"  "+weightedListMap.get(timeInterval).size()+ "   "+ rFlickrData + "%" + sFlickrData);
+//						System.out.println(p + "  "+ iterationCount[i]+"    "+weight+"  "+weightedListMap.get(timeInterval).size()+ "   "+ rFlickrData + "%" + sFlickrData);
 						
-					}
+//					}
 				}
 			}
 		}
@@ -188,9 +195,61 @@ public class TemporalSample{
 		double selectivity = (double)max/(expectedValue * sSize);
 		
 		System.out.println("the selectivity is "+selectivity);
+//		projectTemporalOfSample(rSampleList);
+//		projectTemporalOfSample(sSampleList);
+		
+		Iterator iter = accountMap.entrySet().iterator(); 
+		while (iter.hasNext()) { 
+		    Map.Entry entry = (Map.Entry) iter.next(); 
+		    Object key = entry.getKey();
+		    Object val = entry.getValue(); 
+//		    System.out.println(key);
+		}
+		
+		Iterator iter2 = accountMap.entrySet().iterator(); 
+		while (iter2.hasNext()) { 
+		    Map.Entry entry = (Map.Entry) iter2.next(); 
+		    Object key = entry.getKey();
+		    Object val = entry.getValue(); 
+//		    System.out.println(val);
+		} 
+		
+		return selectivity;
 		
 	}
 	
+	public static Map<Integer,Integer> projectTemporalOfSample(List<FlickrData> list){
+		
+		Map<Integer,Integer> temporalWeight = new HashMap<Integer,Integer>();
+		
+		for(FlickrData fd : list){
+			int timeInterval = (int)(fd.getTimestamp() / FlickrSimilarityUtil.TEMPORAL_THRESHOLD);
+			 if(temporalWeight.get(timeInterval) == null){
+	          	
+				 temporalWeight.put(timeInterval, 1);
+	         	
+	         }else{
+	         	
+	        	 temporalWeight.put(timeInterval, temporalWeight.get(timeInterval)+1);
+	         }
+		}
+		Iterator iter = temporalWeight.entrySet().iterator(); 
+		while (iter.hasNext()) { 
+		    Map.Entry entry = (Map.Entry) iter.next(); 
+		    Object key = entry.getKey();
+		    Object val = entry.getValue(); 
+		    System.out.println(key);
+		}
+		System.out.println("fuck");
+		Iterator iter2 = temporalWeight.entrySet().iterator(); 
+		while (iter2.hasNext()) { 
+		    Map.Entry entry = (Map.Entry) iter2.next(); 
+		    Object key = entry.getKey();
+		    Object val = entry.getValue(); 
+		    System.out.println(val);
+		} 
+		return temporalWeight;
+	}
 	
 	public static void OlkenRAJOIN(){
 		
