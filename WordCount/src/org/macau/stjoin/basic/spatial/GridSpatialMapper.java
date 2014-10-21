@@ -11,6 +11,8 @@ package org.macau.stjoin.basic.spatial;
  * Partition R in one way grid and Partition S in the extension grid, which means that one grid in R just need to 
  * compare one grid in the S, but there may be too many replications in S if the distance threshold is large.
  * 
+ * 
+ * add some change to see how to work with subversion in the eclipse
  */
 
 
