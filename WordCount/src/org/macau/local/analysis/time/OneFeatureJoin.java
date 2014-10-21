@@ -15,6 +15,7 @@ public class OneFeatureJoin {
     // 循环获得每个长度的排列组合
     for (int num = 1; num <= arr.length; num++) {
       t.getSequence(arr, 0, num);
+      
     }
   }
 
