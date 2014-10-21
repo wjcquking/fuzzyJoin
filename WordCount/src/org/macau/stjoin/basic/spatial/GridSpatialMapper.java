@@ -66,6 +66,31 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 		
 	}
 	
+	public static ArrayList<Integer> tileOfS(double lat, double lon){
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		double thres = Math.pow(FlickrSimilarityUtil.DISTANCE_THRESHOLD, 0.5);
+		
+		int latNumberStart = (int) ((lat - thres - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		if(latNumberStart < 0){
+			latNumberStart = 0;
+		}
+		int latNumberEnd = (int) ((lat + thres - FlickrSimilarityUtil.MIN_LAT)/FlickrSimilarityUtil.wholeSpaceWidth * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		int lonNumberStart =(int)((lon-thres- FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		if(lonNumberStart < 0){
+			lonNumberStart = 0;
+		}
+		int lonNumberEnd = (int)((lon + thres - FlickrSimilarityUtil.MIN_LON)/FlickrSimilarityUtil.WholeSpaceLength * FlickrSimilarityUtil.TILE_NUMBER_EACH_LINE);
+		
+		for(int i = latNumberStart;i <= latNumberEnd;i++){
+			for(int j = lonNumberStart;j <= lonNumberEnd;j++){
+//				System.out.println(i + ":" + j);
+				list.add(ZOrderValue.parseToZOrder(i, j));
+			}
+		}
+		
+		return list;
+	}
+	
 	
 	/*
 	 * the cell start from 0 to n-1
@@ -182,8 +207,8 @@ Mapper<Object, Text, IntWritable, FlickrValue>{
 			
 			tileList = tileNumberOfR(lat,lon);
 		}else{
-			
-			tileList = tileNumberOfS(lat,lon);
+//			tileList = tileNumberOfS(lat,lon);
+			tileList = tileOfS(lat,lon);
 		}
 		
 //		System.out.println(tileList.toString());

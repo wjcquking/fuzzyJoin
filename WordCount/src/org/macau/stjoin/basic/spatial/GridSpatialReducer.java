@@ -41,7 +41,7 @@ public class GridSpatialReducer extends
 	public void reduce(IntWritable key, Iterable<FlickrValue> values,
 			Context context) throws IOException, InterruptedException{
 		
-		System.out.println(key);
+//		System.out.println(key);
 		
 		for(FlickrValue value:values){
 			
