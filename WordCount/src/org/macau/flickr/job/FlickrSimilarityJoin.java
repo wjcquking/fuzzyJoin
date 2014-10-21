@@ -11,6 +11,8 @@ import org.macau.flickr.spatial.minimal.MiniSpatialSample;
 import org.macau.flickr.spatial.sjmr.SJMRSpatialSimilarityJoin;
 import org.macau.flickr.spatial.sjmr.rs.SJMRSpatialRSSimilarityJoin;
 import org.macau.flickr.temporal.analysis.TemporalAccount;
+import org.macau.flickr.temporal.basic.TemporalJoinMapper;
+import org.macau.stjoin.basic.temporal.TemporalJoinJob;
 
 public class FlickrSimilarityJoin {
 
@@ -19,6 +21,7 @@ public class FlickrSimilarityJoin {
 		
 		//FileSystem.get(conf).delete(new Path(FlickrSimilarityUtil.flickrOutputPath), true);
 		Long startTime = System.currentTimeMillis();
+		System.out.println("The Start time is " + startTime);
 		
 //		boolean state = TemporalJoinJob.TemporalSimilarityBasicJoin(conf);
 //		boolean state = TemporalAccount.TemporalAccountJob(conf);
@@ -39,15 +42,21 @@ public class FlickrSimilarityJoin {
 		/*
 		 * the kNN spatial Join
 		 */
-		boolean state = PartitionJob.spatialPartitionjob(conf);
+//		boolean state = PartitionJob.spatialPartitionjob(conf);
+//		
+		boolean state = TemporalJoinJob.TemporalSimilarityBasicJoin(conf);
+//		boolean state = org.macau.stjoin.basic.spatial.GridSpatialSimilarityJoin.GridSpatialJoin(conf);
+		
+//		boolean state = org.macau.stjoin.basic.textual.TextualJoinJob.TextualSimilarityBasicJoin(conf);
 		
 		if(state){
+			System.out.println("End at " + System.currentTimeMillis());
 			System.out.println("Phase One cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
 		}
 		
-		boolean second = kNNJoinJob.spatialPartitionjob(conf);
-		if(second){
-			System.out.println("Phase Two cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
-		}
+//		boolean second = kNNJoinJob.spatialPartitionjob(conf);
+//		if(second){
+//			System.out.println("Phase Two cost"+ (System.currentTimeMillis() -startTime)/ (float) 1000.0 + " seconds.");
+//		}
 	}
 }
