@@ -36,6 +36,10 @@ public class TemporalJoinReducer extends
 		private long sCompareCount = 0;
 		private long oCompareCount = 0;
 
+		protected void setup(Context context) throws IOException, InterruptedException {
+
+			System.out.println("Temporal reducer Start at " + System.currentTimeMillis());
+		}
 		
 		public void reduce(LongWritable key, Iterable<FlickrValue> values,
 				Context context) throws IOException, InterruptedException{
@@ -119,6 +123,7 @@ public class TemporalJoinReducer extends
 						
 						FlickrValue value1 = rMap.get(i).get(j);
 						
+						//for the same tail, there is no need for comparing
 						tCompareCount++;
 						for(int k = 0; k < sMap.get(i).size();k++){
 							FlickrValue value2 = sMap.get(i).get(k);
@@ -199,7 +204,7 @@ public class TemporalJoinReducer extends
 		 */
 		protected void cleanup(Context context) throws IOException, InterruptedException {
 			System.out.println("clean up");
-			
+			System.out.println("The Reducer End at"+System.currentTimeMillis());
 			long rMax = 0;
 			long rMin = 1000000;
 			long rC =0;
