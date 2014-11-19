@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.io.Text;
-
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.Mapper.Context;
 import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
@@ -235,23 +233,15 @@ public class TemporalSpatialCombinationJoinReducer extends
 					Map.Entry<Integer,ArrayList<FlickrValue>> m = (Map.Entry<Integer,ArrayList<FlickrValue>>)it.next();
 					m.getKey();
 					ArrayList<FlickrValue> rRecords = m.getValue();
-					//System.out.println(sMap.get(m.getKey()));
+					
 					ArrayList<FlickrValue> sRecords = new ArrayList<FlickrValue>();
 					
-					/*
-					 * This is important,because the sMap may don't have the key value
-					 * so add one if condition to make sure the sMap can get some value by the key
-					 */
+					
 					if(sMap.get(m.getKey()) != null){
 						sRecords = sMap.get(m.getKey());
 					}
 					
 					
-//					System.out.println(rRecords.size() + " r" );
-//					System.out.println(sRecords.size() + " s" );
-					
-					
-//					brute force
 					for (int i = 0; i < rRecords.size(); i++) {
 						
 						FlickrValue value1 = rRecords.get(i);
@@ -290,11 +280,21 @@ public class TemporalSpatialCombinationJoinReducer extends
 			
 		}
 		
-		/*
+		/**********************************************************
 		 * (non-Javadoc)
 		 * @see org.apache.hadoop.mapreduce.Mapper#cleanup(org.apache.hadoop.mapreduce.Mapper.Context)
-		 */
+		 * 
+		 * Statistical Information
+		 * The R Set size
+		 * The S Set Size
+		 * Different feature compare number
+		 * 
+		 * 
+		 *************************************************************/
+		
 		protected void cleanup(Context context) throws IOException, InterruptedException {
+			
+			
 			System.out.println("clean up");
 			System.out.println("The Reducer End at"+System.currentTimeMillis());
 			long rMax = 0;
@@ -302,7 +302,6 @@ public class TemporalSpatialCombinationJoinReducer extends
 			long rC =0;
 			System.out.println("R data set");
 			for(long i : rCount){
-//				System.out.println(i);
 				if(i > rMax){
 					rMax = i;
 				}
@@ -323,7 +322,6 @@ public class TemporalSpatialCombinationJoinReducer extends
 			System.out.println("S data set");
 			
 			for(long i : sCount){
-//				System.out.println(i);
 				if(i > sMax){
 					sMax = i;
 				}

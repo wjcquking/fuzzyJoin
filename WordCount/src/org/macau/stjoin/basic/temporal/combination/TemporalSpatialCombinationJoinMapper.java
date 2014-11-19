@@ -2,13 +2,18 @@ package org.macau.stjoin.basic.temporal.combination;
 
 /**************************************************
  * 
- * The Mapper uses the temporal and spatial information
+ * The mapper uses the temporal and spatial information
  * 
- * For the different data set
+ * For the Temporal information
  * R send one time interval(one replication)
- * S send one more time interval 
+ * S send one more time interval
+ * 
+ * For the Spatial Information
+ * R send the Z order
+ * S send all the covered cell z order
  * 
  *************************************************/
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -76,12 +81,9 @@ public class TemporalSpatialCombinationJoinMapper extends
 		//the textual information
 		outputValue.setTiles(value.toString().split(":")[5]);
 		
-//		System.out.println(value.toString().split(":")[5]);
-		
 		outputValue.setTimestamp(timestamp);
 		
 		
-
 		/***************************
 		 * 
 		 * The Original temporal partition, for each time interval, it is a partition, for the R
@@ -169,13 +171,11 @@ public class TemporalSpatialCombinationJoinMapper extends
 			}
 		}
 		
-	
-		
-		
-		
-		
 	}
+	
 	protected void cleanup(Context context) throws IOException, InterruptedException {
+		
 		System.out.println("The Temporal mapper end at " + System.currentTimeMillis() + "\n");
+		
 	}
 }

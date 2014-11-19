@@ -2,7 +2,7 @@ package org.macau.stjoin.basic.temporal.mixture;
 
 /**************************************************
  * @author wangjian
- * The Mapper uses the temporal and spatial information
+ * The mapper uses the temporal and spatial information
  * 
  * For the different data set
  * R send one time interval(one replication)

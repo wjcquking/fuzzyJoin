@@ -25,11 +25,13 @@ import org.macau.flickr.util.FlickrValue;
  * Date: 2014-11-19
  * 
  **************************************************/
+
+
 public class TemporalSpatialMixtureJoinJob {
 
 	public static boolean TemporalSimilarityBasicJoin(Configuration conf) throws Exception{
 		
-		Job basicJob = new Job(conf,"Temporal Basic Similarity Join");
+		Job basicJob = new Job(conf,"Temporal Spatial Mixture Similarity Join");
 		basicJob.setJarByClass(TemporalSimilarityJoin.class);
 		
 		basicJob.setMapperClass(TemporalSpatialMixtureJoinMapper.class);

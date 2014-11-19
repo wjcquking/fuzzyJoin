@@ -2,7 +2,6 @@ package org.macau.stjoin.basic.temporal.combination;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -12,34 +11,40 @@ import org.macau.flickr.util.FlickrSimilarityUtil;
 import org.macau.flickr.util.FlickrValue;
 
 
-/**
+/*************************************************
  * 
  * @author hadoop
  * Map: Input:  KEY  : 
  *              Value:
- *      output: KEY  :
- *      		Value:
+ *      output: KEY  : The feature 
+ *      		Value: The Record
  *      
  * Reduce: Input: KEY  :
  * 				  Value:
- */
+ * 
+ * Desc: Divide the data into two part and for each part,
+ * 		 The data use different feature.
+ * 
+ * 
+ * Date: 2014-11-19
+ * 
+ **************************************************/
+
+
 public class TemporalSpatialCombinationJoinJob {
 
 	public static boolean TemporalSimilarityBasicJoin(Configuration conf) throws Exception{
 		
-		Job basicJob = new Job(conf,"Temporal Basic Similarity Join");
+		Job basicJob = new Job(conf,"Temporal Spatial Combination Similarity Join");
 		basicJob.setJarByClass(TemporalSimilarityJoin.class);
 		
 		basicJob.setMapperClass(TemporalSpatialCombinationJoinMapper.class);
-//		basicJob.setCombinerClass(TemporalJoinReducer.class);
 		
 		basicJob.setReducerClass(TemporalSpatialCombinationJoinReducer.class);
 		
 		basicJob.setMapOutputKeyClass(Text.class);
 		basicJob.setMapOutputValueClass(FlickrValue.class);
 		
-//		basicJob.setOutputKeyClass(Text.class);
-//		basicJob.setOutputValueClass(Text.class);
 		basicJob.setNumReduceTasks(6);
 		
 		FileInputFormat.addInputPath(basicJob, new Path(FlickrSimilarityUtil.flickrInputPath));
