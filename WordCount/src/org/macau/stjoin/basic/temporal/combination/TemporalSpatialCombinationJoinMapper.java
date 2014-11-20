@@ -137,7 +137,14 @@ public class TemporalSpatialCombinationJoinMapper extends
 //					outputKey.set("S:"+GridPartition.paritionNumber(tile));
 					outputKey.set(FlickrSimilarityUtil.Spatial_TAG +tile);
 					context.write(outputKey, outputValue);
+					
+					if(tile != point){
+						outputKey.set(FlickrSimilarityUtil.Temporal_TAG + tile);
+						context.write(outputKey, outputValue);
+					}
 				}
+				
+				
 				
 			}else{
 				

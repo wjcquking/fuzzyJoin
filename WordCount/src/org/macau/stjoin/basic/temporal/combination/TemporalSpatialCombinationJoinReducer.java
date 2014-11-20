@@ -363,5 +363,24 @@ public class TemporalSpatialCombinationJoinReducer extends
 			
 			
 		}
+		
+		public static String displayCountInformation(List<Long> list){
+			
+			long sMax = 0;
+			long sMin = 1000000;
+			long sC =0;
+			
+			for(long i : list){
+				if(i > sMax){
+					sMax = i;
+				}
+				if(i < sMin){
+					sMin = i;
+				}
+				sC += i;
+			}
+			
+			return "Max " + sMax + "; " + "Min " + sMin + "; " +"Count: " + sC;
+		}
 	}
 
