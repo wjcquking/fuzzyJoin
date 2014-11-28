@@ -125,13 +125,15 @@ public class TemporalSpatialCombinationJoinReducer extends
 			wCount.add(wholeSize);
 			
 
-			/*******
+			/*****************************************
 			 * 
 			 * Use the Key value to judge
 			 * 
 			 * For the Temporal Information
 			 * 
-			 ******/
+			 * Use the Brute Force method to compute the final result
+			 * 
+			 ****************************************/
 			
 			if(key.toString().contains(FlickrSimilarityUtil.Temporal_TAG)){
 				
@@ -154,64 +156,29 @@ public class TemporalSpatialCombinationJoinReducer extends
 							for(int k = 0; k < sMap.get(i).size();k++){
 								FlickrValue value2 = sMap.get(i).get(k);
 								
-								
-								sCompareCount++;
-								if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
+								if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
 									
-									oCompareCount++;
-									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
+									sCompareCount++;
+									if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
 										
-										
-										long ridA = value1.getId();
-							            long ridB = value2.getId();
-							            if (ridA < ridB) {
-							                long rid = ridA;
-							                ridA = ridB;
-							                ridB = rid;
-							            }
-									
-						            
-						            
-							            text.set("" + ridA + "%" + ridB);
-							            context.write(text, new Text(""));
-									}
-								}
-							}
-							
-							// for the adjacent tail
-							if(sMap.containsKey(i+1)){
-								
-								for(int m = 0; m < sMap.get(i+1).size();m++){
-									
-									FlickrValue value3 = sMap.get(i+1).get(m);
-									
-									tCompareCount++;
-									if(FlickrSimilarityUtil.TemporalSimilarity(value1, value3)){
-										
-	//									if(FlickrSimilarityUtil.SpatialSimilarity(value1, value3) && FlickrSimilarityUtil.TextualSimilarity(value1, value3)){
-										sCompareCount++;
-										if(FlickrSimilarityUtil.SpatialSimilarity(value1, value3)){
+										oCompareCount++;
+										if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
 											
-											oCompareCount++;
-											if(FlickrSimilarityUtil.TextualSimilarity(value1, value3)){
 											
-												long ridA = value1.getId();
-									            long ridB = value3.getId();
-									            
-									            if (ridA < ridB) {
-									                long rid = ridA;
-									                ridA = ridB;
-									                ridB = rid;
-									            }
-									            
-												text.set("" + ridA + "%" + ridB);
-									            context.write(text, new Text(""));
-											}
+											long ridA = value1.getId();
+								            long ridB = value2.getId();
+								            if (ridA < ridB) {
+								                long rid = ridA;
+								                ridA = ridB;
+								                ridB = rid;
+								            }
+										
+							            
+							            
+								            text.set("" + ridA + "%" + ridB);
+								            context.write(text, new Text(""));
 										}
-									}else{
-										break;
 									}
-									
 								}
 							}
 							
@@ -255,10 +222,11 @@ public class TemporalSpatialCombinationJoinReducer extends
 				            long ridB = value2.getId();
 				            
 				            sCompareCount++;
-							if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
+				            if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
+							
 								
 								tCompareCount++;
-								if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
+								if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
 									
 									oCompareCount++;
 									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){

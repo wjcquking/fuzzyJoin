@@ -117,7 +117,9 @@ public class TemporalSpatialCombinationJoinMapper extends
 		 * 
 		 * I want to divide the data into two part and see the result 
 		 * improve the result
-		 * there are S and 
+		 * I choose one time interval that has the maximum as the point
+		 * Choose three time interval in R
+		 * Choose Five time interval in S
 		 * 
 		 * For the Key-Value
 		 * Key: add some Feature String Tag, For example, S is for Spatial, T is for the Temporal
@@ -131,6 +133,16 @@ public class TemporalSpatialCombinationJoinMapper extends
 				
 				tileList = GridSpatialMapper.tileOfS(lat,lon);
 				
+				if(timeInterval != point){
+					
+					for(int i = -1; i<=1;i++){
+						long keyValue = timeInterval + i;
+						outputValue.setTileNumber((int)timeInterval + i);
+						outputKey.set(FlickrSimilarityUtil.Temporal_TAG +keyValue);
+						context.write(outputKey, outputValue);
+					}
+				}
+				
 				for(Integer tile: tileList){
 					
 					outputValue.setTileNumber(tile);
@@ -138,10 +150,7 @@ public class TemporalSpatialCombinationJoinMapper extends
 					outputKey.set(FlickrSimilarityUtil.Spatial_TAG +tile);
 					context.write(outputKey, outputValue);
 					
-					if(tile != point){
-						outputKey.set(FlickrSimilarityUtil.Temporal_TAG + tile);
-						context.write(outputKey, outputValue);
-					}
+					
 				}
 				
 				
@@ -150,6 +159,7 @@ public class TemporalSpatialCombinationJoinMapper extends
 				
 				for(int i = -1; i<=1;i++){
 					long keyValue = timeInterval + i;
+					outputValue.setTileNumber((int)timeInterval + i);
 					outputKey.set(FlickrSimilarityUtil.Temporal_TAG +keyValue);
 					context.write(outputKey, outputValue);
 				}
@@ -165,13 +175,13 @@ public class TemporalSpatialCombinationJoinMapper extends
 				for(Integer tile: tileList){
 					
 					outputValue.setTileNumber(tile);
-//					outputKey.set(FlickrSimilarityUtil.Spatial_TAG + GridPartition.paritionNumber(tile));
 					outputKey.set(FlickrSimilarityUtil.Spatial_TAG +tile);
 					context.write(outputKey, outputValue);
 				}
 				
 			}else{
 				
+				outputValue.setTileNumber((int)timeInterval);
 				outputKey.set(FlickrSimilarityUtil.Temporal_TAG + timeInterval);
 				context.write(outputKey, outputValue);
 				
