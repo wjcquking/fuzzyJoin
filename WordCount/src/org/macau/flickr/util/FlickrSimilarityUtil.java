@@ -14,18 +14,18 @@ public class FlickrSimilarityUtil {
 //<<<<<<< HEAD
 //	public static final long TEMPORAL_THRESHOLD = 700L*86400000L;
 //=======
-	public static final long TEMPORAL_THRESHOLD = 500L*86400000L;
+	public static final long TEMPORAL_THRESHOLD = 70L*86400000L;
 //>>>>>>> branch 'master' of https://github.com/wjcquking/fuzzyJoin.git
 //	
 	//spatial threshold, Unit : km
 //<<<<<<< HEAD
 //	public static final double DISTANCE_THRESHOLD = 0.0001;
 //=======
-	public static final double DISTANCE_THRESHOLD = 0.004;
+	public static final double DISTANCE_THRESHOLD = 0.0004;
 	 
 //>>>>>>> branch 'master' of https://github.com/wjcquking/fuzzyJoin.git
 	//textual threshold
-	public static final double TEXTUAL_THRESHOLD = 0.8;
+	public static final double TEXTUAL_THRESHOLD = 0.6;
 	
 	
 	public static final double SAMPLE_PROBABILITY = 0.004;
@@ -58,11 +58,18 @@ public class FlickrSimilarityUtil {
 	public static final String R_TAG = "even";
 	public static final String S_TAG = "odd";
 	
+	
+	public static final String Spatial_TAG = "S:";
+	public static final String Temporal_TAG = "T:";
+	
 	public static final String flickrInputPath = "hdfs://localhost:9000/user/hadoop/input";
 	public static final String flickrOutputPath = "hdfs://localhost:9000/user/hadoop/output";
 	public static final String flickrResultPath = "hdfs://localhost:9000/user/hadoop/result";
 //	public static final String flickrInputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/input";
 //	public static final String flickrOutputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/output";
+	
+//	public static final String flickrInputPath = "hdfs://fireslate.cis.umac.mo:8020/user/mb25428/input";
+//	public static final String flickrOutputPath = "hdfs://fireslate.cis.umac.mo:8020/user/mb25428/output";
 	
 	/**
 	 * 
