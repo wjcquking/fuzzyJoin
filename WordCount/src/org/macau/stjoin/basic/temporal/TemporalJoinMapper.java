@@ -77,19 +77,40 @@ public class TemporalJoinMapper extends
 		outputValue.setTimestamp(timestamp);
 		
 		
-		if(tag == FlickrSimilarityUtil.S_tag && timeInterval % 10 == 0){
+//		if(tag == FlickrSimilarityUtil.S_tag && timeInterval % 10 == 0){
+//			
+//			outputKey.set(timeInterval/10 - 1);
+//			context.write(outputKey, outputValue);
+//			
+//		}
+//		
+//		outputKey.set(timeInterval/10);
+//		context.write(outputKey, outputValue);
+//		
+		//The Original temporal partition, for each time interval, it is a partition, for the R
+		//the time interval is the key, while for the S set, it should set to three time interval
+		if(tag == FlickrSimilarityUtil.S_tag){
 			
-			outputKey.set(timeInterval/10 - 1);
+			for(int i = -1; i<=1;i++){
+				outputKey.set(timeInterval + i);
+				outputValue.setTileNumber((int)timeInterval + i);
+				context.write(outputKey, outputValue);
+			}
+			
+		}else{
+			
+			//for the R set
+			outputKey.set(timeInterval);
 			context.write(outputKey, outputValue);
-			
 		}
 		
-		outputKey.set(timeInterval/10);
-		context.write(outputKey, outputValue);
+	
+		
+		
 		
 		
 	}
 	protected void cleanup(Context context) throws IOException, InterruptedException {
-		System.out.println("The Temporal mapper end at " + System.currentTimeMillis());
+		System.out.println("The Temporal mapper end at " + System.currentTimeMillis() + "\n");
 	}
 }

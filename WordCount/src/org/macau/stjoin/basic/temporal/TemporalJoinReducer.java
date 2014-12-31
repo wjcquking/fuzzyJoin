@@ -47,18 +47,19 @@ public class TemporalJoinReducer extends
 			
 			for(FlickrValue value:values){
 				
-			    
-			    if(value.getTag() == FlickrSimilarityUtil.R_tag){
+				FlickrValue fv = new FlickrValue(value);
+				
+			    if(fv.getTag() == FlickrSimilarityUtil.R_tag){
 			    	
 			    	if(rMap.containsKey(value.getTileNumber())){
 				    	
-				    	rMap.get(value.getTileNumber()).add(new FlickrValue(value));
+				    	rMap.get(value.getTileNumber()).add(new FlickrValue(fv));
 				    	
 				    }else{
 				    	
 				    	ArrayList<FlickrValue> list = new ArrayList<FlickrValue>();
 				    	
-				    	list.add(value);
+				    	list.add(fv);
 				    	
 				    	rMap.put(value.getTileNumber(), list);
 				    	
@@ -67,13 +68,13 @@ public class TemporalJoinReducer extends
 			    	
 			    	if(sMap.containsKey(value.getTileNumber())){
 				    	
-				    	sMap.get(value.getTileNumber()).add(new FlickrValue(value));
+				    	sMap.get(value.getTileNumber()).add(new FlickrValue(fv));
 				    	
 				    }else{
 				    	
 				    	ArrayList<FlickrValue> list = new ArrayList<FlickrValue>();
 				    	
-				    	list.add(value);
+				    	list.add(fv);
 				    	
 				    	sMap.put(value.getTileNumber(), list);
 				    }
@@ -83,16 +84,27 @@ public class TemporalJoinReducer extends
 			}
 			
 		
-			long r = 0;
-			long s = 0;
-			long  w = 0;
+			/*****************************
+			 * 
+			 * 
+			 * Sort the record in the Map to solve the compare time
+			 * For example
+			 * One record in one time interval, it just need compare record before the same position in the adjacent 
+			 * time interval
+			 * 
+			 * Notice: Now this is no use in the following function but I think it is useful
+			 * 
+			 ****************************/
+			long rSetSize = 0;
+			long sSetSize = 0;
+			long  wholeSize = 0;
 			// Sort the List in the Map
 			for(java.util.Iterator<Integer> i = rMap.keySet().iterator();i.hasNext();){
 				
 				TemporalComparator comp = new TemporalComparator();
 				int obj = i.next();
 				Collections.sort(rMap.get(obj),comp);
-				r += rMap.get(obj).size();
+				rSetSize += rMap.get(obj).size();
 				
 			}
 			
@@ -101,13 +113,13 @@ public class TemporalJoinReducer extends
 				TemporalComparator comp = new TemporalComparator();
 				int obj = i.next();
 				Collections.sort(sMap.get(obj),comp);
-				s += sMap.get(obj).size();
+				sSetSize += sMap.get(obj).size();
 				
 			}
-			w = s + r;
-			rCount.add(r);
-			sCount.add(s);
-			wCount.add(w);
+			wholeSize = sSetSize + rSetSize;
+			rCount.add(rSetSize);
+			sCount.add(sSetSize);
+			wCount.add(wholeSize);
 			
 
 			
@@ -124,70 +136,71 @@ public class TemporalJoinReducer extends
 						FlickrValue value1 = rMap.get(i).get(j);
 						
 						//for the same tail, there is no need for comparing
-						tCompareCount++;
+						
 						for(int k = 0; k < sMap.get(i).size();k++){
 							FlickrValue value2 = sMap.get(i).get(k);
-							
-							
-							sCompareCount++;
-							if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
-								
-								oCompareCount++;
-								if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
+							tCompareCount++;
+							if(FlickrSimilarityUtil.TemporalSimilarity(value1, value2)){
+								sCompareCount++;
+								if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
 									
+									oCompareCount++;
+									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
+										
+										
+										long ridA = value1.getId();
+							            long ridB = value2.getId();
+							            if (ridA < ridB) {
+							                long rid = ridA;
+							                ridA = ridB;
+							                ridB = rid;
+							            }
 									
-									long ridA = value1.getId();
-						            long ridB = value2.getId();
-						            if (ridA < ridB) {
-						                long rid = ridA;
-						                ridA = ridB;
-						                ridB = rid;
-						            }
-								
-					            
-					            
-						            text.set("" + ridA + "%" + ridB);
-						            context.write(text, new Text(""));
+						            
+						            
+							            text.set("" + ridA + "%" + ridB);
+							            context.write(text, new Text(""));
+									}
 								}
 							}
 						}
 						
-						// for the adjacent tail
-						if(sMap.containsKey(i+1)){
-							
-							for(int m = 0; m < sMap.get(i+1).size();m++){
-								
-								FlickrValue value3 = sMap.get(i+1).get(m);
-								
-								tCompareCount++;
-								if(FlickrSimilarityUtil.TemporalSimilarity(value1, value3)){
-									
-//									if(FlickrSimilarityUtil.SpatialSimilarity(value1, value3) && FlickrSimilarityUtil.TextualSimilarity(value1, value3)){
-									sCompareCount++;
-									if(FlickrSimilarityUtil.SpatialSimilarity(value1, value3)){
-										
-										oCompareCount++;
-										if(FlickrSimilarityUtil.TextualSimilarity(value1, value3)){
-										
-											long ridA = value1.getId();
-								            long ridB = value3.getId();
-								            
-								            if (ridA < ridB) {
-								                long rid = ridA;
-								                ridA = ridB;
-								                ridB = rid;
-								            }
-								            
-											text.set("" + ridA + "%" + ridB);
-								            context.write(text, new Text(""));
-										}
-									}
-								}else{
-									break;
-								}
-								
-							}
-						}
+//						// for the adjacent tail
+//						if(sMap.containsKey(i+1)){
+//							
+//							for(int m = 0; m < sMap.get(i+1).size();m++){
+//								
+//								FlickrValue value3 = sMap.get(i+1).get(m);
+//								
+//								tCompareCount++;
+//								if(FlickrSimilarityUtil.TemporalSimilarity(value1, value3)){
+//									
+////									if(FlickrSimilarityUtil.SpatialSimilarity(value1, value3) && FlickrSimilarityUtil.TextualSimilarity(value1, value3)){
+//									sCompareCount++;
+//									if(FlickrSimilarityUtil.SpatialSimilarity(value1, value3)){
+//										
+//										oCompareCount++;
+//										if(FlickrSimilarityUtil.TextualSimilarity(value1, value3)){
+//										
+//											long ridA = value1.getId();
+//								            long ridB = value3.getId();
+//								            
+//								            if (ridA < ridB) {
+//								                long rid = ridA;
+//								                ridA = ridB;
+//								                ridB = rid;
+//								            }
+//								            
+//											text.set("" + ridA + "%" + ridB);
+//								            context.write(text, new Text(""));
+//										}
+//									}
+//								}else{
+//									break;
+//								}
+//								
+//							}
+//						}
 						
 					}
 				}
