@@ -106,9 +106,9 @@ public class SuperEGOJoinMapper extends
 		if(tag == FlickrSimilarityUtil.S_tag){
 			sCount++;
 			
-			int group = sCount / 100;
+			int group = sCount / 5000;
 			
-			for(int i = 0; i < 100;i++){
+			for(int i = 0; i < 80;i++){
 				outputKey.set(group + " " + i);
 				outputValue.setTileNumber((int)timeInterval);
 				context.write(outputKey, outputValue);
@@ -116,9 +116,9 @@ public class SuperEGOJoinMapper extends
 		}else if(tag == FlickrSimilarityUtil.R_tag){
 			rCount++;
 			
-			int group = rCount / 100;
+			int group = rCount / 5000;
 			
-			for(int i = 0; i < 100;i++){
+			for(int i = 0; i < 80;i++){
 				outputKey.set(i + " " + group) ;
 				outputValue.setTileNumber((int)timeInterval);
 				context.write(outputKey, outputValue);

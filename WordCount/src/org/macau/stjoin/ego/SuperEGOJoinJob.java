@@ -36,7 +36,7 @@ public class SuperEGOJoinJob {
 
 	public static boolean TemporalSimilarityBasicJoin(Configuration conf) throws Exception{
 		
-		Job basicJob = new Job(conf,"Temporal Basic Similarity Join");
+		Job basicJob = new Job(conf,"Super EGO Join Job");
 		basicJob.setJarByClass(SuperEGOJoinJob.class);
 		
 		basicJob.setMapperClass(SuperEGOJoinMapper.class);
@@ -49,7 +49,7 @@ public class SuperEGOJoinJob {
 		
 //		basicJob.setOutputKeyClass(Text.class);
 //		basicJob.setOutputValueClass(Text.class);
-		basicJob.setNumReduceTasks(6);
+		basicJob.setNumReduceTasks(8);
 		
 		FileInputFormat.addInputPath(basicJob, new Path(FlickrSimilarityUtil.flickrOutputPath));
 		FileOutputFormat.setOutputPath(basicJob, new Path(FlickrSimilarityUtil.flickrResultPath));
