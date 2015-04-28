@@ -26,22 +26,22 @@ import org.macau.flickr.util.FlickrValue;
  */
 public class TemporalCountJob {
 
-	public static boolean TemporalSimilarityBasicJoin(Configuration conf) throws Exception{
+	public static boolean TemporalSimilarityBasicJoin(Configuration conf,int reducerNumber) throws Exception{
 		
-		Job basicJob = new Job(conf,"Temporal Basic Similarity Join");
+		Job basicJob = new Job(conf,"Temporal Count Job");
 		basicJob.setJarByClass(TemporalSimilarityJoin.class);
 		
 		basicJob.setMapperClass(TemporalCountMapper.class);
 //		basicJob.setCombinerClass(TemporalJoinReducer.class);
 		
-//		basicJob.setReducerClass(TemporalJoinReducer.class);
+		basicJob.setReducerClass(TemporalCountReducer.class);
 		
 		basicJob.setMapOutputKeyClass(Text.class);
 		basicJob.setMapOutputValueClass(IntWritable.class);
 		
 //		basicJob.setOutputKeyClass(Text.class);
 //		basicJob.setOutputValueClass(Text.class);
-		basicJob.setNumReduceTasks(6);
+		basicJob.setNumReduceTasks(reducerNumber);
 		
 		FileInputFormat.addInputPath(basicJob, new Path(FlickrSimilarityUtil.flickrInputPath));
 		FileOutputFormat.setOutputPath(basicJob, new Path(FlickrSimilarityUtil.flickrOutputPath));

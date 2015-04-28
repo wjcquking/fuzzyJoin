@@ -82,8 +82,16 @@ public class TemporalCountMapper extends
 //		
 		//The Original temporal partition, for each time interval, it is a partition, for the R
 		//the time interval is the key, while for the S set, it should set to three time interval
+		double thres = Math.pow(FlickrSimilarityUtil.DISTANCE_THRESHOLD, 0.5);
 		
-		context.write(new Text(timeInterval + " "), new IntWritable(1));
+		int x = (int) (lat /thres);
+		int y = (int)(lon/thres );
+		
+//		context.write(new Text(timeInterval + " " + x + "  "+ y), new IntWritable(1));
+		
+		if(tag == FlickrSimilarityUtil.R_tag){
+			context.write(new Text(timeInterval + ""), new IntWritable(1));
+		}
 
 		
 	
