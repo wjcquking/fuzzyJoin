@@ -149,7 +149,7 @@ public class TemporalJoinReducer extends
 								if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
 									
 									oCompareCount++;
-									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
+//									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
 										
 										
 										long ridA = value1.getId();
@@ -164,7 +164,7 @@ public class TemporalJoinReducer extends
 						            
 							            text.set(ridA + "%" + ridB);
 							            context.write(text, new Text(""));
-									}
+//									}
 								}
 							}
 						}
@@ -190,7 +190,7 @@ public class TemporalJoinReducer extends
 								if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
 									
 									oCompareCount++;
-									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
+//									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
 										
 										
 										long ridA = value1.getId();
@@ -205,7 +205,7 @@ public class TemporalJoinReducer extends
 						            
 							            text.set(ridA + "%" + ridB);
 							            context.write(text, new Text(""));
-									}
+//									}
 								}
 							}
 						}
@@ -232,7 +232,7 @@ public class TemporalJoinReducer extends
 								if(FlickrSimilarityUtil.SpatialSimilarity(value1, value2)){
 									
 									oCompareCount++;
-									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
+//									if(FlickrSimilarityUtil.TextualSimilarity(value1, value2)){
 										
 										
 										long ridA = value1.getId();
@@ -247,7 +247,7 @@ public class TemporalJoinReducer extends
 						            
 							            text.set(ridA + "%" + ridB);
 							            context.write(text, new Text(""));
-									}
+//									}
 								}
 							}
 						}
