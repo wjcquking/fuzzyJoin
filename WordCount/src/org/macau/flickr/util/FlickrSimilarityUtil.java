@@ -14,7 +14,7 @@ public class FlickrSimilarityUtil {
 //<<<<<<< HEAD
 //	public static final long TEMPORAL_THRESHOLD = 700L*86400000L;
 //=======
-	public static final long TEMPORAL_THRESHOLD = 70L*86400000L;
+	public static final long TEMPORAL_THRESHOLD = 14L*86400000L;
 //>>>>>>> branch 'master' of https://github.com/wjcquking/fuzzyJoin.git
 //	
 	//spatial threshold, Unit : km
@@ -62,19 +62,24 @@ public class FlickrSimilarityUtil {
 	public static final String Spatial_TAG = "S:";
 	public static final String Temporal_TAG = "T:";
 	
-	public static final String flickrInputPath = "hdfs://localhost:9000/user/hadoop/input";
-	public static final String flickrOutputPath = "hdfs://localhost:9000/user/hadoop/output";
-	public static final String flickrResultPath = "hdfs://localhost:9000/user/hadoop/result";
+//	public static final String flickrInputPath = "hdfs://localhost:9000/user/hadoop/input";
+//	public static final String flickrOutputPath = "hdfs://localhost:9000/user/hadoop/output";
+//	public static final String flickrResultPath = "hdfs://localhost:9000/user/hadoop/result";
 //	public static final String flickrInputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/input";
 //	public static final String flickrOutputPath = "hdfs://10.1.1.1:10000/user/hadoop/flickr/output";
+//	
+//	public static final String flickrInputPath = "hdfs://fireslate.cis.umac.mo:8025/user/mb25428/input2";
+//	public static final String flickrOutputPath = "hdfs://fireslate.cis.umac.mo:8025/user/mb25428/output";
+//	public static final String flickrResultPath = "hdfs://fireslate.cis.umac.mo:8025/user/mb25428/result";
 	
-//	public static final String flickrInputPath = "hdfs://fireslate.cis.umac.mo:8020/user/mb25428/input";
-//	public static final String flickrOutputPath = "hdfs://fireslate.cis.umac.mo:8020/user/mb25428/output";
+	public static final String flickrInputPath = "hdfs://compute-n:8025/user/hadoop/input2";
+	public static final String flickrOutputPath = "hdfs://compute-n:8025/user/hadoop/output";
+	public static final String flickrResultPath = "hdfs://compute-n:8025/user/hadoop/result";
 	
 	/**
 	 * 
 	 * @param value1
-	 * @param value2
+	 * @param value2d
 	 * @return if satisfy the similarity threshold, then return true, else return false
 	 */
 	public static boolean TemporalSimilarity(FlickrValue value1,FlickrValue value2){

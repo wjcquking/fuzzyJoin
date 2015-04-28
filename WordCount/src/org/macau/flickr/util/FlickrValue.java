@@ -52,11 +52,21 @@ public class FlickrValue implements Writable {
 
 	//the tiles List 
     //for example 1,2,3
+	//sometimes record the textual
     private String tiles;
     
+    //records other information of the data
+    private String others;
     
-
   
+
+	public String getOthers() {
+		return others;
+	}
+
+	public void setOthers(String others) {
+		this.others = others;
+	}
 
 	public String getTiles() {
 		return tiles;
@@ -143,6 +153,17 @@ public class FlickrValue implements Writable {
         this.tiles = tiles;
         this.tileNumber = tileNumber;
     }
+    
+    public FlickrValue(long id, double lat, double lon,long timestamp,int tag,String tiles,int tileNumber,String others) {
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.timestamp = timestamp;
+        this.tag = tag;
+        this.tiles = tiles;
+        this.tileNumber = tileNumber;
+        this.others = others;
+    }
 
     public FlickrValue(FlickrValue v) {
         id = v.id;
@@ -152,6 +173,7 @@ public class FlickrValue implements Writable {
         tag = v.tag;
         tiles = v.tiles;
         tileNumber = v.tileNumber;
+        others = v.others;
     }
 
 
@@ -178,6 +200,7 @@ public class FlickrValue implements Writable {
         out.writeInt(tag);
         out.writeInt(tileNumber);
         out.writeUTF(tiles);
+        out.writeUTF(others);
       
     }
 
@@ -190,6 +213,7 @@ public class FlickrValue implements Writable {
 		tag = in.readInt();
 		tileNumber = in.readInt();
 		tiles = in.readUTF();
+		others = in.readUTF();
 		
 	}
 }
