@@ -26,9 +26,9 @@ import org.macau.flickr.util.FlickrValue;
  */
 public class GroupStatisticsJob {
 
-	public static boolean TemporalSimilarityBasicJoin(Configuration conf) throws Exception{
+	public static boolean TemporalSimilarityBasicJoin(Configuration conf,int reducerNumber) throws Exception{
 		
-		Job basicJob = new Job(conf,"Temporal Basic Similarity Join");
+		Job basicJob = new Job(conf,"Super EGO Join Phase 1");
 		basicJob.setJarByClass(TemporalSimilarityJoin.class);
 		
 		basicJob.setMapperClass(GroupStatisticsMapper.class);
@@ -41,7 +41,7 @@ public class GroupStatisticsJob {
 		
 //		basicJob.setOutputKeyClass(Text.class);
 //		basicJob.setOutputValueClass(Text.class);
-		basicJob.setNumReduceTasks(6);
+		basicJob.setNumReduceTasks(reducerNumber);
 		
 		FileInputFormat.addInputPath(basicJob, new Path(FlickrSimilarityUtil.flickrInputPath));
 		FileOutputFormat.setOutputPath(basicJob, new Path(FlickrSimilarityUtil.flickrOutputPath));
