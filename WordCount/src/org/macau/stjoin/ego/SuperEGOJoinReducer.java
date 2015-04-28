@@ -160,12 +160,12 @@ public class SuperEGOJoinReducer extends
 			wCount.add(wholeSize);
 			
 
-//			if(fst_S > lst_R + 1){
-//				
-////				System.out.println("ggggg");
-//			}else if(fst_R > lst_S + 1){
-//				
-//			}else{
+			if(fst_S > lst_R + 1){
+				
+//				System.out.println("ggggg");
+			}else if(fst_R > lst_S + 1){
+				
+			}else{
 			
 			
 			for(java.util.Iterator<Integer> obj = rMap.keySet().iterator();obj.hasNext();){
@@ -298,7 +298,7 @@ public class SuperEGOJoinReducer extends
 				}
 			}
 
-//			}
+			}
 			rMap.clear();
 			sMap.clear();
 		}

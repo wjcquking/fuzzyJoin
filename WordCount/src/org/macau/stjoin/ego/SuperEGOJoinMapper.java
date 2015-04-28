@@ -67,9 +67,10 @@ public class SuperEGOJoinMapper extends
 		
 		String[] values = value.toString().split("\\s+");
 		
-		String record = values[2];
+		String record = values[3];
 		
-		int tag = Integer.parseInt(values[0]);
+		int group = Integer.parseInt(values[0]);
+		int tag = Integer.parseInt(values[1]);
 		
 		long id =Long.parseLong(record.toString().split(":")[0]);
 		double lat = Double.parseDouble(record.toString().split(":")[2]);
@@ -105,20 +106,20 @@ public class SuperEGOJoinMapper extends
 		//S set
 		if(tag == FlickrSimilarityUtil.S_tag){
 			sCount++;
+			System.out.println("SS:" + sCount);
+//			int group = sCount / 10000;
 			
-			int group = sCount / 5000;
-			
-			for(int i = 0; i < 80;i++){
+			for(int i = 0; i < 40;i++){
 				outputKey.set(group + " " + i);
 				outputValue.setTileNumber((int)timeInterval);
 				context.write(outputKey, outputValue);
 			}
 		}else if(tag == FlickrSimilarityUtil.R_tag){
 			rCount++;
+			System.out.println("RR:" + rCount);
+//			int group = rCount / 10000;
 			
-			int group = rCount / 5000;
-			
-			for(int i = 0; i < 80;i++){
+			for(int i = 0; i < 40;i++){
 				outputKey.set(i + " " + group) ;
 				outputValue.setTileNumber((int)timeInterval);
 				context.write(outputKey, outputValue);
