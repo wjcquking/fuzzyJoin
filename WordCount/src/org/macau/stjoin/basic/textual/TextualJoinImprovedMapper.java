@@ -1,10 +1,11 @@
 package org.macau.stjoin.basic.textual;
 
-/**
- * the 
+/***************************************************************
+ *
+ *
  * output Key: get some keywords together as one key, the key number is like the partition number; 
  * 
- */
+ *************************************************************/
 import java.io.IOException;
 
 import org.apache.hadoop.io.IntWritable;

@@ -71,11 +71,16 @@ public class TemporalJoinMapper extends
 		
 		//the textual information
 		outputValue.setTiles(value.toString().split(":")[5]);
+		outputValue.setOthers(value.toString().split(":")[6]);
 		
 //		System.out.println(value.toString().split(":")[5]);
 		
 		outputValue.setTimestamp(timestamp);
 		
+		double thres = Math.pow(FlickrSimilarityUtil.DISTANCE_THRESHOLD, 0.5);
+		
+		int x = (int) (lat /thres);
+		int y = (int)(lon/thres );
 		
 //		if(tag == FlickrSimilarityUtil.S_tag && timeInterval % 10 == 0){
 //			
@@ -89,10 +94,12 @@ public class TemporalJoinMapper extends
 //		
 		//The Original temporal partition, for each time interval, it is a partition, for the R
 		//the time interval is the key, while for the S set, it should set to three time interval
+		long myKey = (long) (timeInterval * 1e7 + x * 1e3 + y);
+		
 		if(tag == FlickrSimilarityUtil.S_tag){
 			
 			for(int i = -1; i<=1;i++){
-				outputKey.set(timeInterval + i);
+				outputKey.set(timeInterval+ i);
 				outputValue.setTileNumber((int)timeInterval + i);
 				context.write(outputKey, outputValue);
 			}
